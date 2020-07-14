@@ -1,0 +1,60 @@
+#pragma once
+
+#include "Core/Base.h"
+
+#include <string>
+#include <unordered_map>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+
+namespace Oxide  {
+
+    class Shader {
+
+    public:
+
+        virtual ~Shader() = default;
+
+        const std::string& GetName() const;
+
+        virtual void Bind();
+        virtual void Unbind();
+
+        virtual void SetUniform(const std::string& name, const bool& value) = 0;
+        virtual void SetUniform(const std::string& name, const int& value) = 0;
+        virtual void SetUniform(const std::string& name, const float& value) = 0;
+        virtual void SetUniform(const std::string& name, const glm::vec2& value) = 0;
+        virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
+        virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;
+        virtual void SetUniform(const std::string& name, const glm::mat4& value) = 0;
+
+        static Ref<Shader> Create(const std::string& name, const std::string& filePath);
+        static Ref<Shader> Create(const std::string& filePath);
+
+    private:
+        
+        std::string m_Name;
+
+    };
+
+    class ShaderLibrary {
+    public:
+
+        void Add(const std::string& name, const Ref<Shader>& shader);
+        void Add(const Ref<Shader>& shader);
+
+        Ref<Shader> Load(const std::string& name, const std::string& filepath);
+
+        Ref<Shader> Get(const std::string& name);
+
+        bool Exists(const std::string& name) const;
+
+    private:
+
+        std::unordered_map<std::string, Ref<Shader>> m_ShaderReferences;
+
+    };
+
+}
