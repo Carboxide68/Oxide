@@ -38,4 +38,33 @@ namespace Oxide {
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
+	//Can be used as:)
+	//OxideError errorEnum = ErrorMaker();
+	//printf(OxideErrorString[errorEnum])
+
+	enum OxideError : int {
+		Error = 0,
+		OK = 1,
+		GOOM = 2,
+		OOM = 3
+	};
+
+	const std::string OxideErrorString[] {
+		"General Error",
+		"No Error",
+		"Graphics Card Out of Memory",
+		"Out Of Memory"
+	};
+
+	enum OxideType {
+		None = 0,
+		Int = 1,
+		Uint = 2,
+		Float = 3,
+		Double = 4,
+		Bool = 5,
+		Short = 6,
+		Ushort = 7
+	};
+
 }
