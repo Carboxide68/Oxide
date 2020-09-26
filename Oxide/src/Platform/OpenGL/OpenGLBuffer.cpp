@@ -72,7 +72,7 @@ namespace Oxide {
 
         }
 
-        m_VAO->Bind(); //Make a global VertexArray for OpenGL
+        m_VAO->Bind(); //TODO: Make a global VertexArray for OpenGL
         glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 
         for (int bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
@@ -81,7 +81,6 @@ namespace Oxide {
                                     OpenGLGetType(m_BufferLayout[bufferElement].type), GL_FALSE, stride, &offset);
             
             offset += m_BufferLayout[bufferElement].TypeSize * m_BufferLayout[bufferElement].Count;
-            
         }
 
     }

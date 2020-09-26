@@ -10,7 +10,7 @@ namespace Oxide {
             OpenGL = 1,
         };
 
-        static API GetAPI();
+        inline static API GetAPI() {return s_API;}
 
 
     private:
