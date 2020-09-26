@@ -109,7 +109,7 @@ namespace Oxide {
 
     }
 
-    void PerspectiveCamera::UpdatePerspectiveMatrix() {
+    void PerspectiveCamera::UpdatePerspectiveMatrix() { //TODO: Make sure that this is oriented correctly
 
         float S = 1/tan(m_FOV/2);
 
