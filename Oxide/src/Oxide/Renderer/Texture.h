@@ -8,7 +8,6 @@
 namespace Oxide {
 
     class Texture2D {
-    
     public:
 
         virtual ~Texture2D() = default;
@@ -41,6 +40,21 @@ namespace Oxide {
 
         uint32_t m_Height;
         uint32_t m_Width;
+
+    };
+
+    class TextureCubeMap {
+    public:
+
+        virtual ~TextureCubeMap() = default;
+
+        virtual void Load(const std::vector<std::string>& imagePaths) = 0;
+        virtual void Bind(uint32_t slot) = 0;
+
+        static Ref<TextureCubeMap> Create();
+        static Ref<TextureCubeMap> Create();
+
+    private:
 
     };
 
