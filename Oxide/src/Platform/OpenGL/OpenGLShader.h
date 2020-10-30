@@ -17,6 +17,10 @@ namespace Oxide {
 
 		OpenGLShader(const std::string& filePath);
 
+		virtual ~OpenGLShader();
+
+        virtual const std::string& GetName() const;
+
 		virtual void Bind() override;
         virtual void Unbind() override;
 

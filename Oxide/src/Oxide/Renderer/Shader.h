@@ -17,10 +17,10 @@ namespace Oxide  {
 
         virtual ~Shader() = default;
 
-        const std::string& GetName() const;
+        virtual const std::string& GetName() const = 0;
 
-        virtual void Bind();
-        virtual void Unbind();
+        virtual void Bind() = 0;
+        virtual void Unbind() = 0;
 
         virtual void SetUniform(const std::string& name, const bool& value) = 0;
         virtual void SetUniform(const std::string& name, const int& value) = 0;
@@ -32,10 +32,6 @@ namespace Oxide  {
 
         static Ref<Shader> Create(const std::string& name, const std::string& filePath);
         static Ref<Shader> Create(const std::string& filePath);
-
-    private:
-        
-        std::string m_Name;
 
     };
 

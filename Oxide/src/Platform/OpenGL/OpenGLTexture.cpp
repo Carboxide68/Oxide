@@ -1,6 +1,7 @@
 
 #include "Platform/OpenGL/OpenGLTexture.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
 #include <GL/glew.h>
 
@@ -151,6 +152,10 @@ namespace Oxide {
     void OpenGLTexture2D::Bind(uint32_t slot) {
         glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
+    }
+
+    void OpenGLTexture2D::Load(const std::string& imagePath) {
+        
     }
 
 }
