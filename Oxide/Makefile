@@ -14,11 +14,11 @@ VPATH = %.cpp $(dirs)
 $(buildDir)%.o: %.cpp
 	$(CC) $(flags) $(includes) -c $< -o $@
 
-$(libDir)oxide.a: $(objFiles)
-	ar rvs $(libDir)oxide.a $(objFiles)
+$(libDir)liboxide.a: $(objFiles)
+	ar rvs $(libDir)liboxide.a $(objFiles)
 
 clean:
 	rm -f build/* || true
 
 build: $(objFiles)
-lib: $(libDir)oxide.a 
+lib: $(libDir)liboxide.a 

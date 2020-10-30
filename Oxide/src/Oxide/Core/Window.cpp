@@ -4,6 +4,12 @@ namespace Oxide {
 
     const Window::WindowProps Window::CO_DEFAULT_WINDOW = {"Oxide Application", 2560, 1440, true};
 
+    Window::Window(WindowProps props) : m_Properties(props) {
+        
+        Init();
+
+    }
+
     void Window::Init() {
 
         CO_CORE_ASSERT(glfwInit(), "Couldn't initialize glfw!");
