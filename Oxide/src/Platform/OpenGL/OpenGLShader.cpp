@@ -18,7 +18,6 @@ namespace Oxide {
 
         ReadShaders(filePath);
 
-<<<<<<< HEAD
     }
 
     OpenGLShader::~OpenGLShader() {
@@ -27,16 +26,6 @@ namespace Oxide {
 
     }
 
-=======
-    }
-
-    OpenGLShader::~OpenGLShader() {
-
-        glDeleteProgram(m_ProgramID);
-
-    }
-
->>>>>>> sandbox
     const std::string& OpenGLShader::GetName() const {return m_Name;}
 
     void OpenGLShader::Bind() {
@@ -79,7 +68,6 @@ namespace Oxide {
 
     void OpenGLShader::ReadShaders(const std::string& filePath) {
 
-<<<<<<< HEAD
         std::ifstream file(filePath);
 
         std::string fileContents;
@@ -199,16 +187,4 @@ namespace Oxide {
         }
         return;
     }
-=======
-    }
-
-    std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& filePath) {
-
-    }
-    
-    void OpenGLShader::Compile(std::unordered_map<GLenum, std::string>& sources) {
-
-    }
-
->>>>>>> sandbox
 }
