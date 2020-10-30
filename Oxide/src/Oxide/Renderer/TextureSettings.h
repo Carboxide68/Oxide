@@ -8,19 +8,19 @@ namespace Oxide {
     class TextureSettings {
 
     public:
-        enum Wrap {
+        enum class Wrap {
             NONE = 0,
             REPEAT = 1,
             CLAMP = 2
         };
 
-        enum Mag {
+        enum class Mag {
             NONE = 0,
             NEAREST = 1,
             LINEAR = 2
         };
 
-        enum Min {
+        enum class Min {
             NONE = 0,
             LINEAR = 1,
             NEAREST = 2

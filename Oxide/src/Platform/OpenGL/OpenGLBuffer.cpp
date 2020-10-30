@@ -9,7 +9,6 @@ namespace Oxide {
     //Initializing function variables
     OpenGLVertexBuffer::OpenGLVertexBuffer() {
 
-        m_VAO->Bind();
         glGenBuffers(1, &m_RendererID);
 
         m_IndexBuffer = nullptr;
@@ -18,9 +17,23 @@ namespace Oxide {
 
     }
 
+    OpenGLVertexBuffer::~OpenGLVertexBuffer() {
+
+        glDeleteBuffers(1, &m_RendererID);
+
+    }
+
+    void OpenGLVertexBuffer::Bind() {
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+
+    }
+
     void OpenGLVertexBuffer::AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
 
         m_IndexBuffer = indexBuffer;
+        m_VAO->Bind();
+        m_IndexBuffer->Bind();
 
     }
 
@@ -28,10 +41,38 @@ namespace Oxide {
         return m_IndexBuffer;
     }
 
-    OxideError OpenGLVertexBuffer::BufferData(const size_t size, void* data) {
-        
+    OxideError OpenGLVertexBuffer::DrawElements(int count) {
+
+        if (m_IndexBuffer == nullptr) {
+            return OxideError::Error;
+        }
+
         m_VAO->Bind();
+        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, NULL);
+
+        return OxideError::OK;
+
+    }
+
+    OxideError OpenGLVertexBuffer::DrawArrays(int count) {
+
+        if (count > m_BufferSize/m_BufferStride) {
+            CO_ASSERT(false, "Count exceeds number of vertexes!");
+            return OxideError::Error;
+        }
+
+        m_VAO->Bind();
+        glDrawArrays(GL_TRIANGLES, 0, count);
+
+        return OxideError::OK;
+
+    }
+
+    OxideError OpenGLVertexBuffer::BufferData(const size_t size, void* data) {
+
+        Bind();        
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+        m_BufferSize = size;
         return OxideError::OK;
 
     }
@@ -63,22 +104,23 @@ namespace Oxide {
 
     void OpenGLVertexBuffer::OnBufferLayoutChange() {
 
-        size_t stride;
-        size_t offset;
+        m_BufferStride = 0;
+        size_t offset = 0;
         
-        for (int bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
+        for (size_t bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
 
-            stride += m_BufferLayout[bufferElement].TypeSize * m_BufferLayout[bufferElement].Count;
+            m_BufferStride += m_BufferLayout[bufferElement].TypeSize * m_BufferLayout[bufferElement].Count;
 
         }
 
         m_VAO->Bind(); //TODO: Make a global VertexArray for OpenGL
-        glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+        Bind();
 
-        for (int bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
+        for (size_t bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
             
             glVertexAttribPointer(  bufferElement, m_BufferLayout[bufferElement].Count, 
-                                    OpenGLGetType(m_BufferLayout[bufferElement].type), GL_FALSE, stride, &offset);
+                                    OpenGLGetType(m_BufferLayout[bufferElement].type), 
+                                    GL_FALSE, m_BufferStride, &offset);
             
             offset += m_BufferLayout[bufferElement].TypeSize * m_BufferLayout[bufferElement].Count;
         }

@@ -3,6 +3,7 @@
 #include "Oxide/Core/Base.h"
 #include "Oxide/Renderer/TextureSettings.h"
 
+#include <vector>
 #include <unordered_map>
 
 namespace Oxide {
@@ -51,7 +52,6 @@ namespace Oxide {
         virtual void Load(const std::vector<std::string>& imagePaths) = 0;
         virtual void Bind(uint32_t slot) = 0;
 
-        static Ref<TextureCubeMap> Create();
         static Ref<TextureCubeMap> Create();
 
     private:

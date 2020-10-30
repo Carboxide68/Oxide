@@ -44,8 +44,8 @@ namespace Oxide {
         std::string m_ShaderName;
         TextureSettings m_Settings;
 
-        uint32_t m_Height;
         uint32_t m_Width;
+        uint32_t m_Height;
 
         uint32_t m_RendererID;
         GLenum m_InternalFormat, m_DataFormat;

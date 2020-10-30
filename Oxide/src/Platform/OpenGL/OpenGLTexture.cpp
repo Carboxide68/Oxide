@@ -1,8 +1,8 @@
 
 #include "Platform/OpenGL/OpenGLTexture.h"
 
-#include <stb_image.h>
-#include <glew.h>
+#include <stb_image/stb_image.h>
+#include <GL/glew.h>
 
 namespace Oxide {
 
@@ -138,11 +138,12 @@ namespace Oxide {
     void OpenGLTexture2D::SetData(void* data, uint32_t size) {
         uint32_t bpp;
         switch (m_DataFormat) {
-            case GL_RGBA: bpp = 4; break;
-            case GL_RGB: bpp = 3; break;
-            case GL_RED: bpp = 1; break;
+            case GL_RGBA:   bpp = 4; break;
+            case GL_RGB:    bpp = 3; break;
+            case GL_RED:    bpp = 1; break;
+            default:        bpp = 0; break;
         }
-        CO_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must fill entire buffer!");
+        CO_CORE_ASSERT(size == (m_Width * m_Height * bpp), "Data must fill entire buffer!");
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
     }

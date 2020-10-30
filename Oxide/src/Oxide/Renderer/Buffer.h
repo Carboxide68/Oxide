@@ -28,7 +28,7 @@ namespace Oxide {
         uint Count;
     };
 
-    class VertexBuffer {
+    class VertexBuffer { //TODO: Implement draw modes
     
     public:
 
@@ -39,8 +39,8 @@ namespace Oxide {
         virtual void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
         virtual const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const = 0;
 
-        virtual const void DrawElements(int count) = 0; //If count is negative, it will draw the maximum number of indices.
-        virtual const void DrawArray(int count) = 0; //If count is negative, it will draw the maximum number of vertices.
+        virtual OxideError DrawElements(int count) = 0; //If count is negative, it will draw the maximum number of indices.
+        virtual OxideError DrawArrays(int count) = 0; //If count is negative, it will draw the maximum number of vertices.
 
         virtual OxideError BufferData(const size_t size, void* data) = 0;
         virtual OxideError AppendData(const size_t size, void* data) = 0;

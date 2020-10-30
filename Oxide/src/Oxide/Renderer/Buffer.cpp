@@ -5,17 +5,19 @@
 #include "Platform/OpenGL/OpenGLBuffer.h"
 #include "Oxide/Renderer/RendererAPI.h"
 
+
 namespace Oxide {
 
     Ref<VertexBuffer> VertexBuffer::Create() {
 
         switch (RendererAPI::GetAPI()) {
             case RendererAPI::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::OpenGL: CreateRef<OpenGLVertexBuffer>(); break;
+            case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>();
             default: break;
         }
 
-        return CO_CORE_ASSERT(false, "This RendererAPI doesn't exist!"); return nullptr;
+        CO_CORE_ASSERT(false, "This RendererAPI doesn't exist!");
+        return nullptr;
     }
 
     const std::vector<BufferElement>& VertexBuffer::GetBufferLayout() const {
