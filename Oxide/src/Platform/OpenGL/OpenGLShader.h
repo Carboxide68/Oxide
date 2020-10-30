@@ -35,8 +35,8 @@ namespace Oxide {
 	private:
 
 		void ReadShaders(const std::string& filePath);
-		std::unordered_map<GLenum, std::string> PreProcess(const std::string& filePath);
-		void Compile(std::unordered_map<GLenum, std::string>& sources);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& fileContent, std::unordered_map<GLenum, std::string>& splitFile);
+		void Compile(const std::unordered_map<GLenum, std::string>& sources);
 
 		int32_t GetUniformLocation(const std::string& name);
 
