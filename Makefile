@@ -1,3 +1,5 @@
 
+objFiles := $(wildcard Oxide/build/*.o)
+
 app:
-	g++ -static -o app Sandbox/main.cpp -LOxide/lib -LOxide/vendor/lib -loxide -lglfw3 -lGLEW -I Oxide/src/ -I vendor/
+	g++ -o app Sandbox/main.cpp -g $(objFiles) -I Oxide/src/ -I Oxide/vendor/ -LOxide/vendor/lib -lGL -lGLU -lGLEW -lglfw3 -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp

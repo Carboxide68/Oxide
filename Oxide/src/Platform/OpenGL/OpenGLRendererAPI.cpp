@@ -5,6 +5,10 @@ namespace Oxide {
 
     OpenGLRendererAPI::~OpenGLRendererAPI() = default;
 
+    OpenGLRendererAPI::OpenGLRendererAPI() : m_ClearColor(1, 1, 1, 1) {
+
+    }
+
     void OpenGLRendererAPI::Init() {
 
         {

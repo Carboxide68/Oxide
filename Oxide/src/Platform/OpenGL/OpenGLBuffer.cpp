@@ -11,6 +11,8 @@ namespace Oxide {
 
         glGenBuffers(1, &m_RendererID);
 
+        m_VAO = CreateRef<OpenGLVertexArray>();
+
         m_IndexBuffer = nullptr;
 
         m_BufferSize = 0;
@@ -56,9 +58,11 @@ namespace Oxide {
 
     OxideError OpenGLVertexBuffer::DrawArrays(int count) {
 
-        if (count > m_BufferSize/m_BufferStride) {
-            CO_ASSERT(false, "Count exceeds number of vertexes!");
-            return OxideError::Error;
+        if (m_BufferStride != 0) {
+            if ((size_t)count > m_BufferSize/m_BufferStride) {
+                CO_ASSERT(false, "Count exceeds number of vertexes!");
+                return OxideError::Error;
+            }
         }
 
         m_VAO->Bind();

@@ -5,8 +5,6 @@
 
 namespace Oxide {
 
-    const std::string& Shader::GetName() const {return m_Name;}
-
     Ref<Shader> Shader::Create(const std::string& name, const std::string& filePath) {
 
         switch (RendererAPI::GetAPI()) {

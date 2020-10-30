@@ -1,6 +1,7 @@
 #pragma once
 #include "Oxide/Core/Base.h"
 #include "Oxide/Renderer/Renderer.h"
+#define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
 namespace Oxide {
@@ -20,6 +21,8 @@ namespace Oxide {
 
         Window(WindowProps props = CO_DEFAULT_WINDOW);
 
+        ~Window();
+
         bool BeginFrame(); //Returns wether the screen should be terminated or not
         void EndFrame();
 
@@ -28,9 +31,12 @@ namespace Oxide {
 
         GLFWwindow* GetWindow();
 
+
         static const WindowProps CO_DEFAULT_WINDOW;
 
     private:
+
+        static void error_callback(int errorCode, const char* description);
 
         void Init();
 

@@ -19,6 +19,8 @@ namespace Oxide {
 
         Renderer();
 
+        void Init();
+
         void BeginFrame();
         void EndFrame();
 

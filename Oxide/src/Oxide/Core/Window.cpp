@@ -10,24 +10,44 @@ namespace Oxide {
 
     }
 
+    Window::~Window() {
+
+        glfwDestroyWindow(m_Window);
+
+    }
+
     void Window::Init() {
 
-        CO_CORE_ASSERT(glfwInit(), "Couldn't initialize glfw!");
+        if(!glfwInit()) {
+            printf("Couldn't initialize glfw!\n");
+            return;
+        }
 
-        glfwWindowHint(GLFW_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_VERSION_MINOR, 6);
+        glfwSetErrorCallback(error_callback);
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         m_Window = glfwCreateWindow(m_Properties.width, m_Properties.height, m_Properties.title.c_str(), NULL, NULL);
 
-        CO_CORE_ASSERT(m_Window, "Window not properly created!");
-
+        if (!m_Window) {
+            const char* desc;
+            int err = glfwGetError(&desc);
+            printf("Window didn't initialize correctly! Error: %s\n", desc);
+        }
         glfwMakeContextCurrent(m_Window);
+
+        if (m_Properties.VSync == true) {
+            glfwSwapInterval(1);
+        }
+
+        m_Renderer.Init();
 
     }
 
     bool Window::BeginFrame() {
 
-        glfwMakeContextCurrent(m_Window);
         if (glfwWindowShouldClose(m_Window)) {
             return true;
         }
@@ -42,4 +62,10 @@ namespace Oxide {
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
     }
+
+    void Window::error_callback(int errorCode, const char* description) {
+        printf("Something went wrong with glfw!\nError: %s\nError code: %d\n", description, errorCode);
+        return;
+    }
+
 }
