@@ -14,5 +14,9 @@ namespace Oxide {
         m_RendererAPI->ClearBuffers();
 
     }
+
+    void Renderer::EndFrame() {
+
+    }
  
 }
