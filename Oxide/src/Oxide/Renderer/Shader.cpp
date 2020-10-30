@@ -16,6 +16,9 @@ namespace Oxide {
 
         }
 
+        CO_CORE_ASSERT(false, "This RendererAPI doesn't exist!");
+        return nullptr;
+
     }
 
     Ref<Shader> Shader::Create(const std::string& filePath) {
@@ -25,10 +28,10 @@ namespace Oxide {
             case RendererAPI::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
             case RendererAPI::API::OpenGL: return CreateRef<OpenGLShader>(filePath);
 
-            CO_CORE_ASSERT(false, "Rendering API doesn't exist!");
-            return nullptr;
-
         }
+
+        CO_CORE_ASSERT(false, "Rendering API doesn't exist!");
+        return nullptr;
     }
 
     Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filePath) {

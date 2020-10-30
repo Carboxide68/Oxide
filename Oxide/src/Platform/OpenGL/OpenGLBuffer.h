@@ -18,8 +18,8 @@ namespace Oxide {
         virtual void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
         virtual const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const override;
 
-        virtual const void DrawElements(int count) override; //If count is negative, it will draw the maximum number of indices.
-        virtual const void DrawArray(int count) override; //If count is negative, it will draw the maximum number of vertices.
+        virtual OxideError DrawElements(int count) override; //If count is negative, it will draw the maximum number of indices.
+        virtual OxideError DrawArrays(int count) override; //If count is negative, it will draw the maximum number of vertices.
 
         virtual OxideError BufferData(const size_t size, void* data) override;
         virtual OxideError AppendData(const size_t size, void* data) override;
@@ -36,6 +36,7 @@ namespace Oxide {
 
         size_t m_BufferSize;
         size_t m_BufferPosition;
+        size_t m_BufferStride;
 
         std::vector<BufferElement> m_BufferLayout;
 

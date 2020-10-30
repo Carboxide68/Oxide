@@ -9,7 +9,7 @@ namespace Oxide {
 
     }
 
-    const float& PerspectiveCamera::GetFOV() const {
+    float PerspectiveCamera::GetFOV() const {
         return glm::degrees(m_FOV);
     }
 
@@ -53,7 +53,7 @@ namespace Oxide {
         return m_PerspectiveMatrix;
     }
     
-    const glm::vec3& PerspectiveCamera::GetPosition() const {
+    glm::vec3 PerspectiveCamera::GetPosition() const {
 
         glm::vec3 position;
         position.x = m_ViewMatrix[3][0];
@@ -93,7 +93,7 @@ namespace Oxide {
         );
     }
     
-    const glm::vec3& PerspectiveCamera::GetLookAt() const {
+    glm::vec3 PerspectiveCamera::GetLookAt() const {
         glm::vec3 position;
 
         position.x = m_ViewMatrix[2][0];

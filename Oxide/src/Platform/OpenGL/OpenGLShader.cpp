@@ -1,7 +1,7 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <glew.h>
+#include <GL/glew.h>
 
 namespace Oxide {
 

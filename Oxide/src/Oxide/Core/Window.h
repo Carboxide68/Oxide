@@ -1,47 +1,43 @@
 #pragma once
-
 #include "Oxide/Core/Base.h"
-#include "glfw/glfw3.h"
+#include "Oxide/Renderer/Renderer.h"
+#include "GLFW/glfw3.h"
 
 namespace Oxide {
 
-    struct WindowProps {
-		std::string Title;
-		uint32_t Width;
-		uint32_t Height;
-
-		WindowProps(const std::string& title = "Oxide",
-			        uint32_t width = 1280,
-			        uint32_t height = 720)
-			: Title(title), Width(width), Height(height){}
-	};
-
+    //Each window is associated with a completely different openGL context
     class Window {
     public:
 
-        Window(const WindowProps& props = WindowProps());
-        ~Window();
+        struct WindowProps {
+            
+            std::string title;
 
-        void OnUpdate();
+            unsigned int height, width;
+            bool VSync;
 
-        uint32_t GetWidth() const;
-        uint32_t GetHeight() const;
+        };
 
-        void SetVSync(bool enabled);
-        bool IsVSync() const;
+        Window(WindowProps props = CO_DEFAULT_WINDOW);
 
-        void* GetNativeWindow() const;
+        bool BeginFrame(); //Returns wether the screen should be terminated or not
+        void EndFrame();
+
+        unsigned int GetHeight() const;
+        unsigned int GetWidth() const;
+
+        GLFWwindow* GetWindow();
+
+        static const WindowProps CO_DEFAULT_WINDOW;
 
     private:
 
+        void Init();
+
         GLFWwindow* m_Window;
+        WindowProps m_Properties;
+        Renderer m_Renderer;
 
-        struct WindowData {
-            std::string Title;
-            unsigned int Width, Height;
-            bool VSync;
-        };
-
-    }
+    };
 
 }

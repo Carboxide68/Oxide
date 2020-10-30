@@ -8,8 +8,13 @@ namespace Oxide {
     public:
 
         OpenGLVertexArray();
+        ~OpenGLVertexArray();
         
         void Bind();
+
+    private:
+
+        uint32_t m_RendererID;
 
     };
 

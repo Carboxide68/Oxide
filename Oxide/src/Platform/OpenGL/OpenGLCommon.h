@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Oxide/Core/Base.h"
-#include "glew.h"
+#include <GL/glew.h>
 
 namespace Oxide {
 

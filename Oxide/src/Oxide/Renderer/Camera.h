@@ -16,7 +16,7 @@ namespace Oxide {
         const glm::mat4& GetViewMatrix() const;
         const glm::mat4& GetPerspectiveMatrix() const;
 
-        const float& GetFOV() const;
+        float GetFOV() const;
         const float& GetFOVRadians() const;
         void SetFOV(const float& degrees);
         void SetFOVRadians(const float& radians);
@@ -26,12 +26,12 @@ namespace Oxide {
         const float& GetNear() const;
         const float& GetFar() const;
 
-        const glm::vec3& GetPosition() const;
+        glm::vec3 GetPosition() const;
         void SetPosition(const glm::vec3& position);
         void Move(const glm::vec3& position);
 
         void LookAt(const glm::vec3& position); //Looks at object without rotating around x-axis
-        const glm::vec3& GetLookAt() const; //Returns a vector with a length of 1 in the direction which it's looking at
+        glm::vec3 GetLookAt() const; //Returns a vector with a length of 1 in the direction which it's looking at
 
         static Ref<PerspectiveCamera> Create();
 
