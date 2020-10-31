@@ -1,16 +1,24 @@
 @vertex
 #version 330 core
 
-layout(location=0) in vec2 pos;
+layout(location=0) in vec3 pos;
+
+out vec3 FragPos;
+
+uniform mat4 compositeMatrix;
+uniform mat4 modelMatrix;
 
 void main() {
 
-    gl_Position = pos; 
+    gl_Position = compositeMatrix * vec4(pos, 1.0);
+    FragPos = (modelMatrix * vec4(pos, 1.0)).xyz;
 
 }
 
 @fragment
 #version 330 core
+
+in vec3 FragPos;
 
 uniform vec3 color;
 
@@ -18,7 +26,8 @@ out vec4 fragColor;
 
 void main() {
 
-    fragColor = vec4(color, 1);
+    vec3 fPos = normalize(FragPos);
+    fragColor = vec4(color * vec3(fPos.x, fPos.y, fPos.z), 1);
 
 }
 

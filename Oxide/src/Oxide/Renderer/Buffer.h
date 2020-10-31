@@ -57,7 +57,7 @@ namespace Oxide {
 
         static Ref<VertexBuffer> Create();
 
-    private:
+    protected:
 
         virtual void OnBufferLayoutChange() = 0;
 

@@ -37,15 +37,13 @@ namespace Oxide {
         size_t m_BufferSize;
         size_t m_BufferPosition;
         size_t m_BufferStride;
-
-        std::vector<BufferElement> m_BufferLayout;
-
+        
     };
 
     class OpenGLIndexBuffer : public IndexBuffer {
-        
 
-        
+
+
     };
 
 }

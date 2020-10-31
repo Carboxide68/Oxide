@@ -11,6 +11,9 @@ objFiles := $(patsubst %.cpp, %.o, $(addprefix $(buildDir), $(notdir $(foreach d
 CC = g++
 VPATH = %.cpp $(dirs)
 
+build: $(objFiles)
+lib: $(libDir)liboxide.a 
+
 $(buildDir)%.o: %.cpp
 	$(CC) $(flags) $(includes) -c $< -o $@
 
@@ -19,6 +22,3 @@ $(libDir)liboxide.a: $(objFiles)
 
 clean:
 	rm -f build/* || true
-
-build: $(objFiles)
-lib: $(libDir)liboxide.a 

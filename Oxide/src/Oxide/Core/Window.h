@@ -32,6 +32,7 @@ namespace Oxide {
         GLFWwindow* GetWindow();
 
 
+        Renderer renderer;
         static const WindowProps CO_DEFAULT_WINDOW;
 
     private:
@@ -42,7 +43,6 @@ namespace Oxide {
 
         GLFWwindow* m_Window;
         WindowProps m_Properties;
-        Renderer m_Renderer;
 
     };
 

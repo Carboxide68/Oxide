@@ -60,12 +60,14 @@ namespace Oxide {
 
         if (m_BufferStride != 0) {
             if ((size_t)count > m_BufferSize/m_BufferStride) {
-                CO_ASSERT(false, "Count exceeds number of vertexes!");
+                CO_CORE_ASSERT(false, "Count exceeds number of vertexes!");
+                printf("Count exceeds number of vertexes!");
                 return OxideError::Error;
             }
         }
 
         m_VAO->Bind();
+        Bind();
         glDrawArrays(GL_TRIANGLES, 0, count);
 
         return OxideError::OK;
@@ -85,7 +87,7 @@ namespace Oxide {
 
         m_VAO->Bind();
         if (m_BufferPosition + size > m_BufferSize) {
-            CO_ASSERT(false, "Buffer not big enough to append data!");
+            CO_CORE_ASSERT(false, "Buffer not big enough to append data!");
             return OxideError::Error;
         }
         glBufferSubData(GL_ARRAY_BUFFER, m_BufferPosition, size, data);
@@ -109,7 +111,7 @@ namespace Oxide {
     void OpenGLVertexBuffer::OnBufferLayoutChange() {
 
         m_BufferStride = 0;
-        size_t offset = 0;
+        int offset = 0;
         
         for (size_t bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
 
@@ -121,16 +123,12 @@ namespace Oxide {
         Bind();
 
         for (size_t bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
-            
+            glEnableVertexAttribArray(bufferElement);
             glVertexAttribPointer(  bufferElement, m_BufferLayout[bufferElement].Count, 
                                     OpenGLGetType(m_BufferLayout[bufferElement].type), 
-                                    GL_FALSE, m_BufferStride, &offset);
+                                    GL_FALSE, m_BufferStride, (void*)offset);
             
             offset += m_BufferLayout[bufferElement].TypeSize * m_BufferLayout[bufferElement].Count;
         }
-
     }
-
-    
-
 }

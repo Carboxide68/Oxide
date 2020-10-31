@@ -66,5 +66,4 @@ namespace Oxide {
 		Short = 6,
 		Ushort = 7
 	};
-
 }

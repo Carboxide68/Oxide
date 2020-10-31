@@ -17,7 +17,26 @@ namespace Oxide {
 
         };
 
+        struct Viewport {
+            uint32_t x;
+            uint32_t y;
+            uint32_t width;
+            uint32_t height;
+        };
+
         Renderer();
+
+        void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
+        void SetViewport(uint32_t width, uint32_t height);
+
+        inline const Viewport& GetViewport() const {return m_Viewport;}
+
+        void SetClearColor(const float& r, const float& g, const float& b, const float& a);
+        void SetClearColor(const glm::vec4& color);
+
+    protected:
+
+        friend class Window;
 
         void Init();
 
@@ -28,6 +47,7 @@ namespace Oxide {
     
     private:
 
+        Viewport m_Viewport;
         std::array<uint32_t, 3> m_Settings;
         Scope<RendererAPI> m_RendererAPI;
 

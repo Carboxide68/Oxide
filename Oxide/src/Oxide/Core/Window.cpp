@@ -42,7 +42,9 @@ namespace Oxide {
             glfwSwapInterval(1);
         }
 
-        m_Renderer.Init();
+        renderer.Init();
+
+        renderer.SetViewport(0, 0, m_Properties.width, m_Properties.height);
 
     }
 
@@ -52,13 +54,13 @@ namespace Oxide {
             return true;
         }
 
-        m_Renderer.BeginFrame();
+        renderer.BeginFrame();
 
         return false;
     }
 
     void Window::EndFrame() {
-        m_Renderer.EndFrame();
+        renderer.EndFrame();
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
     }
@@ -66,6 +68,14 @@ namespace Oxide {
     void Window::error_callback(int errorCode, const char* description) {
         printf("Something went wrong with glfw!\nError: %s\nError code: %d\n", description, errorCode);
         return;
+    }
+
+    uint Window::GetHeight() const {
+        return m_Properties.height;
+    }
+
+    uint Window::GetWidth() const {
+        return m_Properties.width;
     }
 
 }
