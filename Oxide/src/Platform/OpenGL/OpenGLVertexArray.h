@@ -11,6 +11,7 @@ namespace Oxide {
         ~OpenGLVertexArray();
         
         void Bind();
+        void Unbind();
 
     private:
 
