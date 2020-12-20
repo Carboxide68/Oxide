@@ -57,4 +57,16 @@ namespace Oxide {
         OnBufferLayoutChange();
     }
 
+    Ref<IndexBuffer> IndexBuffer::Create() {
+
+        switch (RendererAPI::GetAPI()) {
+            case RendererAPI::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+            case RendererAPI::API::OpenGL: return CreateRef<OpenGLIndexBuffer>();
+            default: break;
+        }
+
+        CO_CORE_ASSERT(false, "This RendererAPI doesn't exist!");
+        return nullptr;
+    }
+
 }

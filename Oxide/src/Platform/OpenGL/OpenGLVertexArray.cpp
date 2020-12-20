@@ -21,4 +21,10 @@ namespace Oxide {
 
     }
 
+    void OpenGLVertexArray::Unbind() {
+
+        glBindVertexArray(0);
+
+    }
+
 }

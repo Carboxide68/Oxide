@@ -13,18 +13,19 @@ namespace Oxide {
         OpenGLVertexBuffer();
         ~OpenGLVertexBuffer();
 
-        virtual void Bind() override;
+        void Bind() override;
 
-        virtual void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
-        virtual const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const override;
+        void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
+        const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const override;
 
-        virtual OxideError DrawElements(int count) override; //If count is negative, it will draw the maximum number of indices.
-        virtual OxideError DrawArrays(int count) override; //If count is negative, it will draw the maximum number of vertices.
+        OxideError DrawElements(int count) override; //If count is negative, it will draw the maximum number of indices.
+        OxideError DrawArrays(int count) override; //If count is negative, it will draw the maximum number of vertices.
 
-        virtual OxideError BufferData(const size_t size, void* data) override;
-        virtual OxideError AppendData(const size_t size, void* data) override;
-        virtual OxideError Allocate(const size_t size) override;
-        virtual size_t GetBufferSize() const override;
+        OxideError BufferData(const size_t size, void* data) override;
+        OxideError AppendData(const size_t size, void* data) override;
+        OxideError Allocate(const size_t size) override;
+
+        size_t GetBufferSize() const override;
 
     private:
 
@@ -42,7 +43,15 @@ namespace Oxide {
 
     class OpenGLIndexBuffer : public IndexBuffer {
 
+        ~OpenGLIndexBuffer();
 
+        void Bind() override;
+
+        OxideError BufferData(const size_t size, const void *data) override;
+        OxideError AppendData(const size_t size, void* data) override;
+        OxideError Allocate(const size_t size) override;
+
+        size_t GetBufferSize() override;
 
     };
 

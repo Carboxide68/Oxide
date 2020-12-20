@@ -2,6 +2,7 @@
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 #include "OpenGLCommon.h"
+#include "Oxide/Core/Log.h"
 
 namespace Oxide {
 
@@ -60,8 +61,7 @@ namespace Oxide {
 
         if (m_BufferStride != 0) {
             if ((size_t)count > m_BufferSize/m_BufferStride) {
-                CO_CORE_ASSERT(false, "Count exceeds number of vertexes!");
-                printf("Count exceeds number of vertexes!");
+                CO_ERROR(false, "Count exceeds number of vertexes!");
                 return OxideError::Error;
             }
         }
@@ -87,7 +87,7 @@ namespace Oxide {
 
         m_VAO->Bind();
         if (m_BufferPosition + size > m_BufferSize) {
-            CO_CORE_ASSERT(false, "Buffer not big enough to append data!");
+            CO_ERROR(false, "Buffer not big enough to append data!");
             return OxideError::Error;
         }
         glBufferSubData(GL_ARRAY_BUFFER, m_BufferPosition, size, data);

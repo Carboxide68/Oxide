@@ -15,7 +15,9 @@ namespace Oxide {
         virtual void Bind() = 0;
 
         virtual OxideError BufferData(const size_t size, const void *data) = 0;
+        virtual OxideError AppendData(const size_t size, void* data) = 0;
         virtual OxideError Allocate(const size_t size) = 0;
+
         virtual size_t GetBufferSize() = 0;
 
         static Ref<IndexBuffer> Create();
