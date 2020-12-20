@@ -1,5 +1,5 @@
 
-#include "Oxide/Renderer/RendererAPI.h"
+#include "Oxide/Renderer/Renderer.h"
 
 #include "Oxide/Renderer/Texture.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
@@ -7,23 +7,23 @@
 namespace Oxide {
 
     Ref<Texture2D> Texture2D::Create(const std::string& imagePath) {
-        switch(RendererAPI::GetAPI()) {
-            case RendererAPI::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture2D>(imagePath);
+        switch(Renderer::GetAPI()) {
+            case Renderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
+            case Renderer::API::OpenGL: return CreateRef<OpenGLTexture2D>(imagePath);
         };
 
-        CO_CORE_ASSERT(false, "This RendererAPI does not exist!");
+        CO_CORE_ASSERT(false, "This Renderer API does not exist!");
         return nullptr;
     }
 
     Ref<Texture2D> Texture2D::Create(const int& x, const int& y) {
 
-        switch(RendererAPI::GetAPI()) {
-            case RendererAPI::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture2D>(x, y);
+        switch(Renderer::GetAPI()) {
+            case Renderer::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+            case Renderer::API::OpenGL: return CreateRef<OpenGLTexture2D>(x, y);
         };
 
-        CO_CORE_ASSERT(false, "This RendererAPI does not exist!");
+        CO_CORE_ASSERT(false, "This Renderer API does not exist!");
         return nullptr;
     }
 

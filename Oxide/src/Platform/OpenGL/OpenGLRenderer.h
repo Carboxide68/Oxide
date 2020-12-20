@@ -10,14 +10,22 @@ namespace Oxide {
         OpenGLRenderer();
         ~OpenGLRenderer();
 
-        void Init() override;
-        void SetViewport(uint32_t x, uint32_t y, uint32_t widht, uint32_t height) override;
-        void SetClearColor(const glm::vec4& color) override;
+        void SetViewport(Renderer::Viewport viewport) override;
+        void SetViewport(uint32_t width, uint32_t height) override;
+
+        void SetClearColor(const float& r, const float& g, const float& b, const float& a) override;
 
         void ClearBuffers() override;
 
         void ChangeState(Renderer::RenderSettings setting, bool toggle) override;
 
+
+    protected:
+
+        void Init() override;
+
+        void BeginFrame() override;
+        void EndFrame() override;
 
     private:
 

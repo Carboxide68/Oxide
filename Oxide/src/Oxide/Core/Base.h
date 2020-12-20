@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <signal.h>
+#include <functional>
+#include <iostream>
 
 #ifdef CO_DEBUG
     #define CO_DEBUGBREAK() raise(SIGTRAP)

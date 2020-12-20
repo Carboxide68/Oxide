@@ -3,16 +3,16 @@
 
 #include "Oxide/Renderer/Buffer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
-#include "Oxide/Renderer/RendererAPI.h"
+#include "Oxide/Renderer/Renderer.h"
 
 
 namespace Oxide {
 
     Ref<VertexBuffer> VertexBuffer::Create() {
 
-        switch (RendererAPI::GetAPI()) {
-            case RendererAPI::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>();
+        switch (Renderer::GetAPI()) {
+            case Renderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
+            case Renderer::API::OpenGL: return CreateRef<OpenGLVertexBuffer>();
             default: break;
         }
 

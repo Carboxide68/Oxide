@@ -27,7 +27,7 @@ out vec4 fragColor;
 void main() {
 
     vec3 fPos = normalize(FragPos);
-    fragColor = vec4(color * vec3(fPos.x, fPos.y, fPos.z), 1);
+    fragColor = vec4(color * fPos, 1);
 
 }
 

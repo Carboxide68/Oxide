@@ -16,4 +16,12 @@ namespace Oxide {
         return nullptr;
 
     }
+
+    void Renderer::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+        SetViewport({x, y, width, height});
+    }
+
+    void Renderer::SetClearColor(const glm::vec4& color) {
+        SetClearColor(color.x, color.y, color.z, color.w);
+    }
 }
