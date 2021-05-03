@@ -18,8 +18,8 @@ namespace Oxide {
         void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
         const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const override;
 
-        OxideError DrawElements(int count) override; //If count is negative, it will draw the maximum number of indices.
-        OxideError DrawArrays(int count) override; //If count is negative, it will draw the maximum number of vertices.
+        OxideError DrawElements(int count = -1) override; //If count is negative, it will draw the maximum number of indices.
+        OxideError DrawArrays(int count = -1) override; //If count is negative, it will draw the maximum number of vertices.
 
         OxideError BufferData(const size_t size, void* data) override;
         OxideError AppendData(const size_t size, void* data) override;
@@ -43,6 +43,8 @@ namespace Oxide {
 
     class OpenGLIndexBuffer : public IndexBuffer {
 
+    public:
+        OpenGLIndexBuffer();
         ~OpenGLIndexBuffer();
 
         void Bind() override;
@@ -51,7 +53,13 @@ namespace Oxide {
         OxideError AppendData(const size_t size, void* data) override;
         OxideError Allocate(const size_t size) override;
 
-        size_t GetBufferSize() override;
+        const size_t& GetBufferSize() override;
+
+    private:
+
+        uint32_t m_RendererID;
+        size_t m_BufferSize;
+        size_t m_BufferPosition;
 
     };
 

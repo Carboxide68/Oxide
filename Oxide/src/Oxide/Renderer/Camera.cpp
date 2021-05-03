@@ -1,7 +1,7 @@
 #include "Oxide/Renderer/Camera.h"
 #include "glm/trigonometric.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Oxide/Renderer/Renderer.h"
+#include "Oxide/Renderer/CRenderer.h"
 
 namespace Oxide {
 
@@ -94,7 +94,7 @@ namespace Oxide {
         m_Position += position;
     }
                                                                 //TODO: Make sure that it doesn't become bad if position is too close to x = 1
-    void PerspectiveCamera::LookAt(const glm::vec3& position) { //FIXME: Test if this actually works, I have no idea
+    void PerspectiveCamera::LookAt(const glm::vec3& position) {
         m_LookingDir = glm::normalize(position - m_Position);
     }
     
@@ -120,8 +120,6 @@ namespace Oxide {
             0 ,   0, -tmp2,   0   
 
         );
-
-        glm::mat4 glmPersp = glm::perspective(m_FOV, 720.0f/500.0f, m_Near, m_Far);
 
     }
 

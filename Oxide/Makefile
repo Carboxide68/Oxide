@@ -1,7 +1,7 @@
 buildDir = build/
 libDir = lib/
 includes = src/ vendor/
-flags = -std=c++2a -g -Wall -Wno-unused-function
+flags = -std=c++2a -g -Wall -Wno-unused-function -O2
 
 includes := $(addprefix -I ,$(includes))
 

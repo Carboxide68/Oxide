@@ -19,7 +19,7 @@ namespace Oxide {
 
     }
 
-    void OpenGLRenderer::SetViewport(Renderer::Viewport viewport) {
+    void OpenGLRenderer::SetViewport(CRenderer::Viewport viewport) {
 
         glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
@@ -45,10 +45,10 @@ namespace Oxide {
 
     }
 
-    void OpenGLRenderer::ChangeState(Renderer::RenderSettings setting, bool toggle) {
+    void OpenGLRenderer::ChangeState(CRenderer::RenderSettings setting, bool toggle) {
 
         switch (setting) {
-            case Renderer::RenderSettings::BLEND:
+            case CRenderer::RenderSettings::BLEND:
 
                 if (toggle)
                     glEnable(GL_BLEND);
@@ -56,21 +56,21 @@ namespace Oxide {
                     glDisable(GL_BLEND);
                 break;
 
-            case Renderer::RenderSettings::DEPTH_TEST:
+            case CRenderer::RenderSettings::DEPTH_TEST:
 
                 if (toggle)
                     glEnable(GL_DEPTH_TEST);
                 else
                     glDisable(GL_DEPTH_TEST);
                 break;
-            case Renderer::RenderSettings::FACE_CULLING:
+            case CRenderer::RenderSettings::FACE_CULLING:
 
                 if (toggle)
                     glEnable(GL_CULL_FACE);
                 else
                     glDisable(GL_CULL_FACE);
                 break;
-            case Renderer::RenderSettings::STENCIL_TEST:
+            case CRenderer::RenderSettings::STENCIL_TEST:
 
                 if (toggle)
                     glEnable(GL_STENCIL_TEST);

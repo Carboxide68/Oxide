@@ -37,7 +37,7 @@ namespace Oxide {
 
         if (!m_Window) {
             const char* desc;
-            int err = glfwGetError(&desc);
+            glfwGetError(&desc);
             CO_ERROR("Window didn't initialize correctly! Error: %s\n", desc);
         }
         glfwMakeContextCurrent(m_Window);
@@ -46,7 +46,7 @@ namespace Oxide {
             glfwSwapInterval(1);
         }
 
-        renderer = Renderer::Create();
+        renderer = CRenderer::Create();
         renderer->Init();
 
         renderer->SetViewport(0, 0, m_Properties.width, m_Properties.height);
@@ -96,11 +96,11 @@ namespace Oxide {
     }
 
     void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        GetWindow(window)->eventhandler->KeyEvent((OxideEvent)GLFWToOxideEvent[key], (OxideEvent)GLFWToOxideEvent[action]); 
+        GetWindow(window)->eventhandler->KeyEvent((OxideEvent)KeyEventGLFWToOxide[key], (OxideEvent)ActionGLFWToOxide[action]); 
     }
 
     void Window::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-        GetWindow(window)->eventhandler->MouseButtonEvent((OxideEvent)GLFWToOxideEvent[button], (OxideEvent)GLFWToOxideEvent[action]);
+        GetWindow(window)->eventhandler->MouseButtonEvent((OxideEvent)MouseButtonGLFWToOxide[button], (OxideEvent)ActionGLFWToOxide[action]);
     }
 
     void Window::CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {

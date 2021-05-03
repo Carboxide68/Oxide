@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Oxide/Core/Base.h"
+#include "Oxide/Scene/Resource/Uniform.h"
 
 #include <string>
 #include <unordered_map>
@@ -29,6 +30,9 @@ namespace Oxide  {
         virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
         virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;
         virtual void SetUniform(const std::string& name, const glm::mat4& value) = 0;
+
+        template <class T>
+        constexpr inline void SetUniform(const Uniform<T>& uniform) {SetUniform(Uniform.GetName(), Uniform.GetValue());}
 
         static Ref<Shader> Create(const std::string& name, const std::string& filePath);
         static Ref<Shader> Create(const std::string& filePath);

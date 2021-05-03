@@ -3,7 +3,7 @@
 #include "Oxide/Core/Base.h"
 
 #include "Oxide/Core/Window.h"
-#include "Oxide/Renderer/Renderer.h"
+#include "Oxide/Renderer/CRenderer.h"
 
 #include "Oxide/Renderer/Camera.h"
 #include "Oxide/Renderer/Buffer.h"

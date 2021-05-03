@@ -3,16 +3,16 @@
 
 #include "Oxide/Renderer/Buffer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
-#include "Oxide/Renderer/Renderer.h"
+#include "Oxide/Renderer/CRenderer.h"
 
 
 namespace Oxide {
 
     Ref<VertexBuffer> VertexBuffer::Create() {
 
-        switch (Renderer::GetAPI()) {
-            case Renderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
-            case Renderer::API::OpenGL: return CreateRef<OpenGLVertexBuffer>();
+        switch (CRenderer::GetAPI()) {
+            case CRenderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
+            case CRenderer::API::OpenGL: return CreateRef<OpenGLVertexBuffer>();
             default: break;
         }
 
@@ -59,14 +59,16 @@ namespace Oxide {
 
     Ref<IndexBuffer> IndexBuffer::Create() {
 
-        switch (Renderer::GetAPI()) {
-            case Renderer::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-            case Renderer::API::OpenGL: return CreateRef<OpenGLIndexBuffer>();
+        switch (CRenderer::GetAPI()) {
+            case CRenderer::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+            case CRenderer::API::OpenGL: return CreateRef<OpenGLIndexBuffer>();
             default: break;
         }
 
         CO_CORE_ASSERT(false, "This RendererAPI doesn't exist!");
         return nullptr;
     }
+
+    
 
 }

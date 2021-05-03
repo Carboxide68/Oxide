@@ -9,7 +9,6 @@ namespace Oxide {
 
     class IndexBuffer {
     public:
-        IndexBuffer();
         virtual ~IndexBuffer() = default;
 
         virtual void Bind() = 0;
@@ -18,7 +17,7 @@ namespace Oxide {
         virtual OxideError AppendData(const size_t size, void* data) = 0;
         virtual OxideError Allocate(const size_t size) = 0;
 
-        virtual size_t GetBufferSize() = 0;
+        virtual const size_t& GetBufferSize() = 0;
 
         static Ref<IndexBuffer> Create();
 
@@ -27,7 +26,7 @@ namespace Oxide {
     struct BufferElement {
         size_t TypeSize;
         OxideType type;
-        uint Count;
+        uint count;
     };
 
     class VertexBuffer { //TODO: Implement draw modes
@@ -41,10 +40,10 @@ namespace Oxide {
         virtual void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
         virtual const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const = 0;
 
-        virtual OxideError DrawElements(int count) = 0; //If count is negative, it will draw the maximum number of indices.
-        virtual OxideError DrawArrays(int count) = 0; //If count is negative, it will draw the maximum number of vertices.
+        virtual OxideError DrawElements(int count = -1) = 0; //If count is negative, it will draw the maximum number of indices.
+        virtual OxideError DrawArrays(int count = -1) = 0; //If count is negative, it will draw the maximum number of vertices.
 
-        virtual OxideError BufferData(const size_t size, void* data) = 0;
+        virtual OxideError BufferData(const size_t size, void* data) = 0;   
         virtual OxideError AppendData(const size_t size, void* data) = 0;
         virtual OxideError Allocate(const size_t size) = 0;
         virtual size_t GetBufferSize() const = 0;
@@ -66,5 +65,4 @@ namespace Oxide {
         std::vector<BufferElement> m_BufferLayout;
 
     };
-
 }

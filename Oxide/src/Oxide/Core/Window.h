@@ -1,6 +1,6 @@
 #pragma once
 #include "Oxide/Core/Base.h"
-#include "Oxide/Renderer/Renderer.h"
+#include "Oxide/Renderer/CRenderer.h"
 #include "Oxide/Events/Event.h"
 #include <iostream>
 #define GLFW_INCLUDE_NONE
@@ -34,7 +34,7 @@ namespace Oxide {
         inline constexpr GLFWwindow* GetGLFWWindow() const {return m_Window;};
 
 
-        Scope<Renderer> renderer;
+        Scope<CRenderer> renderer;
         Ref<EventHandler> eventhandler;
         static const WindowProps CO_DEFAULT_WINDOW;
 

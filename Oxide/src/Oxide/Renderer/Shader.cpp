@@ -1,4 +1,4 @@
-#include "Oxide/Renderer/Renderer.h"
+#include "Oxide/Renderer/CRenderer.h"
 
 #include "Oxide/Renderer/Shader.h"
 #include "Platform/OpenGL/OpenGLShader.h"
@@ -7,10 +7,10 @@ namespace Oxide {
 
     Ref<Shader> Shader::Create(const std::string& name, const std::string& filePath) {
 
-        switch (Renderer::GetAPI()) {
+        switch (CRenderer::GetAPI()) {
 
-            case Renderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
-            case Renderer::API::OpenGL: return CreateRef<OpenGLShader>(name, filePath);
+            case CRenderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
+            case CRenderer::API::OpenGL: return CreateRef<OpenGLShader>(name, filePath);
 
         }
 
@@ -21,10 +21,10 @@ namespace Oxide {
 
     Ref<Shader> Shader::Create(const std::string& filePath) {
 
-        switch (Renderer::GetAPI()) {
+        switch (CRenderer::GetAPI()) {
 
-            case Renderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
-            case Renderer::API::OpenGL: return CreateRef<OpenGLShader>(filePath);
+            case CRenderer::API::None: CO_CORE_ASSERT(false, "Renderer::API::None is currently not supported!"); return nullptr;
+            case CRenderer::API::OpenGL: return CreateRef<OpenGLShader>(filePath);
 
         }
 

@@ -13,7 +13,7 @@ namespace Oxide {
         }
 
     }
-    
+
     void EventHandler::MouseButtonEvent(OxideEvent button, OxideEvent action) {
 
         for (auto i : m_MouseButtonEvents) {
@@ -31,8 +31,8 @@ namespace Oxide {
 
     void EventHandler::WindowEvent(OxideEvent event) {
 
-        for (int i = 0; i < m_WindowEvents.size(); i++) {
-            m_WindowEvents[i](event);
+        for (auto i : m_WindowEvents) {
+            i(event);
         }
     }
 
