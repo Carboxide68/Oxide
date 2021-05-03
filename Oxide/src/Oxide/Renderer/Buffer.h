@@ -23,6 +23,13 @@ namespace Oxide {
 
     };
 
+    /**
+     * 
+     * 
+     * \struct
+     * Struct containing information about a vertex in a Vertex Buffer
+     * 
+     */
     struct BufferElement {
         size_t TypeSize;
         OxideType type;
@@ -37,7 +44,7 @@ namespace Oxide {
 
         virtual void Bind() = 0;
 
-        virtual void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
+        virtual void AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer) = 0;
         virtual const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const = 0;
 
         virtual OxideError DrawElements(int count = -1) = 0; //If count is negative, it will draw the maximum number of indices.
@@ -49,12 +56,16 @@ namespace Oxide {
         virtual size_t GetBufferSize() const = 0;
 
         virtual const std::vector<BufferElement>& GetBufferLayout() const;
-        virtual void AddElementToBufferLayout(const BufferElement& element);
+
+        /**
+         * Be careful using a custom position since it changes the behaviour of future AddElementsToBufferLayout
+         */ 
+        virtual void AddElementToBufferLayout(const BufferElement& element, int position = -1);
         virtual void AddElementToBufferLayout(const OxideType& type, const uint& count);
         virtual void AddElementToBufferLayout(const size_t& typeSize, const OxideType& type, const uint& count);
         virtual void AddElementsToBufferLayout(const std::vector<BufferElement>& elements);
         virtual void SetBufferLayout(const std::vector<BufferElement>& elements);
-        virtual void ClearBufferLayout();
+        virtual void ClearBufferLayout(); //TODO: Allow changing mode of buffer layout to AAAABBBBCCCC or ABCABCABCABC
 
         static Ref<VertexBuffer> Create();
 

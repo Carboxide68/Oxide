@@ -3,7 +3,10 @@
 #include "Oxide/Core/Base.h"
 #include "Oxide/Scene/Resource/Renderable.h"
 #include "Oxide/Scene/Resource/Uniform.h"
+#include "Oxide/Scene/Resource/Material.h"
 #include "Oxide/Renderer/Texture.h"
+#include "Oxide/Renderer/Buffer.h"
+#include "Oxide/Renderer/Shader.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -22,8 +25,6 @@ namespace Oxide {
 
     public:
 
-        Renderer() = delete;
-
         virtual void Draw();
 
         std::string Name;
@@ -38,17 +39,13 @@ namespace Oxide {
     class RendererTemplate : public Renderer {
     public:
 
-        RendererTemplate() = delete;
-
         virtual void Draw();
     
-        virtual void Load(const T *data);
+        virtual void Load(const T data);
     
     private:
 
         virtual void DrawAll() const;
-
-        static std::
 
     };
 
@@ -59,25 +56,32 @@ namespace Oxide {
         std::vector<float> *texCoords = {};
         std::vector<unsigned short> *indices = {};
 
-        Uniform<glm::mat4> *modelMatrix;
-        Material *material;
-
-
+        Uniform<glm::mat4> modelMatrix;
+        Material material;
     };
 
-    class CO_STANDARD_RENDERER : public RendererTemplate<StandardRenderData> { //TODO: Make a better way to craete these classes
+    class CO_STANDARD_RENDERER : public RendererTemplate<StandardRenderData> { //TODO: Make a better way to create these classes
     
     public:
+
+        CO_STANDARD_RENDERER();
 
         static Ref<Renderer> Create();
 
         void Draw() override;
 
-        void Load(const StandardRenderData *data) override;
+        void Load(const StandardRenderData data) override;
 
     protected:
 
         void DrawAll() const override;
+
+    private:
+
+        Ref<VertexBuffer> m_VB;
+        Ref<IndexBuffer> m_IB;
+        Ref<Shader> m_Shader;
+
 
     };
 }

@@ -15,7 +15,7 @@ namespace Oxide {
 
         void Bind() override;
 
-        void AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
+        void AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer) override;
         const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const override;
 
         OxideError DrawElements(int count = -1) override; //If count is negative, it will draw the maximum number of indices.

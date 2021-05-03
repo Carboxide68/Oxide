@@ -26,8 +26,15 @@ namespace Oxide {
 
     }
 
-    void VertexBuffer::AddElementToBufferLayout(const BufferElement& element) {
-        m_BufferLayout.push_back(element);
+    void VertexBuffer::AddElementToBufferLayout(const BufferElement& element, int position) {
+        if (position != -1) {
+            if (position > m_BufferLayout.size()) {
+                m_BufferLayout.resize(position + 1, {OxideType::None, });
+            }
+            m_BufferLayout[position] = element;
+        } else {
+            m_BufferLayout.push_back(element);
+        }
         OnBufferLayoutChange();
     }
 

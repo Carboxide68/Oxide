@@ -32,7 +32,7 @@ namespace Oxide {
 
     }
 
-    void OpenGLVertexBuffer::AssociateIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
+    void OpenGLVertexBuffer::AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer) {
 
         m_IndexBuffer = indexBuffer;
         m_VAO->Bind();
@@ -142,6 +142,7 @@ namespace Oxide {
         Bind();
 
         for (size_t bufferElement = 0; bufferElement < m_BufferLayout.size(); bufferElement++) {
+            if (m_BufferLayout[bufferElement].type == OxideType::None) continue;
             glEnableVertexAttribArray(bufferElement);
             glVertexAttribPointer(  bufferElement, m_BufferLayout[bufferElement].count, 
                                     OpenGLGetType(m_BufferLayout[bufferElement].type), 
