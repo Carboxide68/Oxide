@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Oxide/Core/Base.h"
-#include "Oxide/Scene/Resource/Renderable.h"
 #include "Oxide/Scene/Resource/Uniform.h"
 #include "Oxide/Scene/Resource/Material.h"
 #include "Oxide/Renderer/Texture.h"
@@ -15,6 +14,7 @@
 
 namespace Oxide {
 
+    class Renderable;
 
     /**
      * 
@@ -25,7 +25,7 @@ namespace Oxide {
 
     public:
 
-        virtual void Draw();
+        virtual void Draw(Renderable *object);
 
         std::string Name;
 
@@ -39,7 +39,7 @@ namespace Oxide {
     class RendererTemplate : public Renderer {
     public:
 
-        virtual void Draw();
+        virtual void Draw(Renderable *object);
     
         virtual void Load(const T data);
     
@@ -58,30 +58,5 @@ namespace Oxide {
 
         Uniform<glm::mat4> modelMatrix;
         Material material;
-    };
-
-    class CO_STANDARD_RENDERER : public RendererTemplate<StandardRenderData> { //TODO: Make a better way to create these classes
-    
-    public:
-
-        CO_STANDARD_RENDERER();
-
-        static Ref<Renderer> Create();
-
-        void Draw() override;
-
-        void Load(const StandardRenderData data) override;
-
-    protected:
-
-        void DrawAll() const override;
-
-    private:
-
-        Ref<VertexBuffer> m_VB;
-        Ref<IndexBuffer> m_IB;
-        Ref<Shader> m_Shader;
-
-
     };
 }
