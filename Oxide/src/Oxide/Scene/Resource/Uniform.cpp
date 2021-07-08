@@ -3,8 +3,64 @@
 
 namespace Oxide {
 
+    class Uniform<int> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 0;
+        }
+    };
+
+    class Uniform<float> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 1;
+        }
+    };
+
+    class Uniform<glm::vec2> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 2;
+        }
+    };
+
+    class Uniform<glm::vec3> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 3;
+        }
+    };
+
+    class Uniform<glm::vec4> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 4;
+        }
+    };
+
+    class Uniform<glm::mat4> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 5;
+        }
+    };
+
+    class Uniform<Texture2D> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 6;
+        }
+    };
+
+    class Uniform<TextureCubeMap> : private UniformShell {
+    private:
+        void m_TypeMe() {
+            m_Type = 7;
+        }
+    };
+
     UniformShell::~UniformShell() {
-        switch(Type) {
+        switch(m_Type) {
             case 0:
                 ((Uniform<int>*)this)->~Uniform();
             case 1:
@@ -28,7 +84,7 @@ namespace Oxide {
     }
 
     void UniformShell::SetUniform(const Shader* targetShader) const {
-        switch(Type) {
+        switch(m_Type) {
             case 0:
                 targetShader->SetUniform((Uniform<int>*)this);
             case 1:

@@ -30,7 +30,7 @@ namespace Oxide  {
         virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
         virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;
         virtual void SetUniform(const std::string& name, const glm::mat4& value) = 0;
-        void SetUniform(const Ref<Texture2D> texture);
+        virtual void SetUniform(const Ref<Texture2D> texture) = 0;
 
         template <class T>
         inline void SetUniform(const Uniform<T>& uniform) const {SetUniform(uniform.GetName(), uniform.GetValue());}

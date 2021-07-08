@@ -110,12 +110,13 @@ int main(int argc, char *argv[]) {
     myModelMatrix[1][1] = 1;
     myModelMatrix[2][2] = 1;
 
-    myBuffer->BufferData(sizeof(vertexData), (void*)vertexData);
+    myBuffer->BufferData(sizeof(data), (void*)data);
     myBuffer->AddElementToBufferLayout(Oxide::OxideType::Float, 3);
+    myBuffer->AddElementToBufferLayout(Oxide::OxideType::Float, 2);
 
-    Oxide::Ref<Oxide::IndexBuffer> myIndexBuffer = Oxide::IndexBuffer::Create();
-    myIndexBuffer->BufferData(sizeof(indexData), (void*)indexData);
-    myBuffer->AssociateIndexBuffer(myIndexBuffer);
+    // Oxide::Ref<Oxide::IndexBuffer> myIndexBuffer = Oxide::IndexBuffer::Create();
+    // myIndexBuffer->BufferData(sizeof(indexData), (void*)indexData);
+    // myBuffer->AssociateIndexBuffer(myIndexBuffer);
 
 
     bool moving = true;
@@ -145,6 +146,7 @@ int main(int argc, char *argv[]) {
         }
     });
     Oxide::Ref<Oxide::Texture2D> myTexture = Oxide::Texture2D::Create("Sandbox/rsrc/texture1.jpeg");
+    myTexture->SetName("texture1");
 
     while (!myWindow.BeginFrame()) {
 
@@ -163,9 +165,10 @@ int main(int argc, char *argv[]) {
         myShader->SetUniform("color", glm::vec3(1, 1, 1));
         myShader->SetUniform("compositeMatrix", perspectiveMat * viewMat * myModelMatrix);
         myShader->SetUniform("modelMatrix", myModelMatrix);
+        myTexture->Bind(0);
+        myShader->SetUniform(myTexture->GetName(), 0);
 
-
-        myBuffer->DrawElements(36);
+        myBuffer->DrawArrays(36);
 
         if (moving)
             angle += 0.01;
