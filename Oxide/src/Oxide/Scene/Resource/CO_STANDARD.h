@@ -18,12 +18,15 @@ namespace Oxide {
     public:
 
         CO_STANDARD_RENDERER();
+        ~CO_STANDARD_RENDERER();
 
         static Ref<Renderer> Create();
 
-        void Draw(Renderable *object) override;
+        void Draw(const Renderable *object) override;
 
         void Load(const StandardRenderData data) override;
+
+        static const std::string Name;
 
     protected:
 
@@ -34,9 +37,7 @@ namespace Oxide {
         Ref<VertexBuffer> m_VB;
         Ref<IndexBuffer> m_IB;
         Ref<Shader> m_Shader;
-
-        const std::string m_Name = "CO_STANDARD_RENDERER";
-
+        std::vector<UniformShell*> m_Uniforms;
 
     };
 }

@@ -11,7 +11,7 @@ namespace Oxide {
 
         Ref<Renderer> ObjectRenderer;
         
-        inline void Draw() const {ObjectRenderer->Draw(this);}
+        virtual inline void Draw() const {ObjectRenderer->Draw(this);}
 
         inline const std::string GetRendererName() const {return m_RendererName;}
 

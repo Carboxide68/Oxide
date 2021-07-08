@@ -25,9 +25,9 @@ namespace Oxide {
 
     public:
 
-        virtual void Draw(Renderable *object);
+        virtual void Draw(const Renderable *object);
 
-        std::string Name;
+        static const std::string Name;
 
     protected:
 
@@ -39,7 +39,7 @@ namespace Oxide {
     class RendererTemplate : public Renderer {
     public:
 
-        virtual void Draw(Renderable *object);
+        virtual void Draw(const Renderable *object);
     
         virtual void Load(const T data);
     

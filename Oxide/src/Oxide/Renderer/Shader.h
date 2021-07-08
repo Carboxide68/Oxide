@@ -30,9 +30,14 @@ namespace Oxide  {
         virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
         virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;
         virtual void SetUniform(const std::string& name, const glm::mat4& value) = 0;
+        void SetUniform(const Ref<Texture2D> texture);
 
         template <class T>
-        constexpr inline void SetUniform(const Uniform<T>& uniform) {SetUniform(Uniform.GetName(), Uniform.GetValue());}
+        inline void SetUniform(const Uniform<T>& uniform) const {SetUniform(uniform.GetName(), uniform.GetValue());}
+        template <class T>
+        inline void SetUniform(const Uniform<T>* uniform) const {SetUniform(uniform->GetName(), uniform->GetValue());}
+        
+        inline void SetUniform(const UniformShell* uniform) const {uniform->SetUniform(this);}
 
         static Ref<Shader> Create(const std::string& name, const std::string& filePath);
         static Ref<Shader> Create(const std::string& filePath);
