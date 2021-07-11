@@ -1,7 +1,7 @@
 buildDir = build/
 libDir = lib/
 includes = src/ vendor/
-flags = -std=c++2a -g -Wall -Wno-unused-function -O2
+flags = -std=c++2a -Wall -Wno-unused-function
 
 includes := $(addprefix -I ,$(includes))
 
@@ -11,7 +11,15 @@ objFiles := $(patsubst %.cpp, %.o, $(addprefix $(buildDir), $(notdir $(foreach d
 CC = g++
 VPATH = %.cpp $(dirs)
 
-build: $(objFiles)
+debug: flags := $(flags) -g
+debug: $(objFiles)
+
+release: flags := $(flags) -O2
+release: $(objFiles)
+
+precompile.cc: flags := $(flags) -E
+precompile.cc: $(objFiles)
+
 lib: $(libDir)liboxide.a 
 
 $(buildDir)%.o: %.cpp

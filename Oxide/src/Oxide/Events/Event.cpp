@@ -36,6 +36,12 @@ namespace Oxide {
         }
     }
 
+    void EventHandler::ResizeEvent(int width, int height) {
+        for (auto i : m_ResizeEvents) {
+            i(width, height);
+        }
+    }
+
     void EventHandler::OnMouseEvent(std::function<void (double, double)> fn) {
         m_MouseEvents.push_back(fn);
     }
@@ -50,6 +56,10 @@ namespace Oxide {
 
     void EventHandler::OnWindowEvent(std::function<void (OxideEvent)> fn) {
         m_WindowEvents.push_back(fn);
+    }
+
+    void EventHandler::OnResizeEvent(std::function<void (int,int)> fn) {
+        m_ResizeEvents.push_back(fn);
     }
 
     // void EventHandler::GLFWWindowEvent(GLFWwindow *window, int key, int scancode, int action, int mods) {

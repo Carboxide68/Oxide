@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Oxide/Core/Base.h"
+#include "Oxide/Scene/Scene.h"
 #include <glm/vec4.hpp>
 
 namespace Oxide {
@@ -44,11 +46,15 @@ namespace Oxide {
         inline static API GetAPI() {return s_API;}
         static Scope<CRenderer> Create();
 
+        Ref<Scene> scene;
+
     protected:
 
         friend class Window;
 
         virtual void Init() = 0;
+
+        void m_MainLoop();
 
         virtual void BeginFrame() = 0;
         virtual void EndFrame() = 0;

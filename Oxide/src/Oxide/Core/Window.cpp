@@ -4,13 +4,18 @@
 
 namespace Oxide {
 
-    const Window::WindowProps Window::CO_DEFAULT_WINDOW = {"Oxide Application", 2560, 1440, true};
-    std::vector<Window*> Window::m_WindowInstances;
+    const WindowSettings Window::CO_DEFAULT_WINDOW = {"Oxide Application", 2560, 1440, true};
 
-    Window::Window(WindowProps props) : m_Properties(props) {
-        
-        Init();
+    Window::Window(WindowSettings props) {
+        m_Properties = props;
+    }
 
+    void Window::Init() {
+        if (!m_Initialized)
+            m_Init();
+        else
+            CO_ERROR("Window has already been initialized!\n");
+        return;
     }
 
     Window::~Window() {
@@ -19,14 +24,20 @@ namespace Oxide {
 
     }
 
-    void Window::Init() {
+    void Window::UpdateSettings(WindowSettings& settings) {
+        m_Properties = settings;
+        glfwSetWindowTitle(m_Window, settings.title.c_str());
+        glfwSetWindowSize(m_Window, settings.width, settings.height);
+        glfwSwapInterval((settings.VSync) ? 1 : 0);
+    }
+
+    void Window::m_Init() {
 
         if(!glfwInit()) {
             CO_ERROR("Couldn't initialize glfw!\n");
             return;
         }
 
-        eventhandler = CreateRef<EventHandler>();
         glfwSetErrorCallback(error_callback);
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -35,12 +46,16 @@ namespace Oxide {
 
         m_Window = glfwCreateWindow(m_Properties.width, m_Properties.height, m_Properties.title.c_str(), NULL, NULL);
 
+
         if (!m_Window) {
             const char* desc;
             glfwGetError(&desc);
             CO_ERROR("Window didn't initialize correctly! Error: %s\n", desc);
         }
         glfwMakeContextCurrent(m_Window);
+
+        m_WindowInstances[(uint64_t)m_Window] = this;
+        eventhandler = CreateRef<EventHandler>();
 
         if (m_Properties.VSync == true) {
             glfwSwapInterval(1);
@@ -50,27 +65,28 @@ namespace Oxide {
         renderer->Init();
 
         renderer->SetViewport(0, 0, m_Properties.width, m_Properties.height);
-        m_WindowInstances.push_back(this);
         glfwSetKeyCallback(m_Window, KeyCallback);
         glfwSetMouseButtonCallback(m_Window, MouseButtonCallback);
         glfwSetCursorPosCallback(m_Window, CursorPosCallback);
+        glfwSetWindowSizeCallback(m_Window, WindowResizeCallback);
+        m_Initialized = true;
     }
 
     bool Window::BeginFrame() {
 
         if (glfwWindowShouldClose(m_Window)) {
-            return true;
+            return false;
         }
 
+        glfwPollEvents();
         renderer->BeginFrame();
 
-        return false;
+        return true;
     }
 
     void Window::EndFrame() {
         renderer->EndFrame();
         glfwSwapBuffers(m_Window);
-        glfwPollEvents();
     }
 
     void Window::error_callback(int errorCode, const char* description) {
@@ -87,12 +103,8 @@ namespace Oxide {
     }
 
     const Window* Window::GetWindow(const GLFWwindow* window) {
-        for (Window* testWindow : m_WindowInstances) {
-            if (window == testWindow->GetGLFWWindow()) {
-                return testWindow;
-            }
-        }
-        return nullptr;
+        if (!m_WindowInstances.contains((uint64_t)window)) return nullptr;
+        return m_WindowInstances[(uint64_t)window];
     }
 
     void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -105,5 +117,9 @@ namespace Oxide {
 
     void Window::CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
         GetWindow(window)->eventhandler->MouseEvent(xpos, ypos);
+    }
+
+    void Window::WindowResizeCallback(GLFWwindow* window, int width, int height) {
+        GetWindow(window)->eventhandler->ResizeEvent(width, height);
     }
 }

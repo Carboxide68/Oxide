@@ -7,11 +7,13 @@ namespace Oxide {
 
     PerspectiveCamera::PerspectiveCamera() {
 
+        type = CameraType::Orthographic;
         m_ViewMatrix = glm::mat4(1);
         m_Far = 100.0f;
         m_Near = 0.1f;
         m_FOV = 90.0f;
-        m_Aspect = 1.0f;
+        m_Aspect = (float)(16.0/9.0);
+        m_LookingDir = {1, 0, 0};
         UpdatePerspectiveMatrix();
 
     }
@@ -61,6 +63,7 @@ namespace Oxide {
     }
 
     const glm::mat4& PerspectiveCamera::GetViewMatrix() {
+        if (!m_UpdateViewMatrix) return m_ViewMatrix;
         glm::vec3 UP = glm::vec3(0, 1, 0);
 
         glm::vec3 z = m_LookingDir;
@@ -88,14 +91,17 @@ namespace Oxide {
     }
     void PerspectiveCamera::SetPosition(const glm::vec3& position) {
         m_Position = position;
+        m_UpdateViewMatrix = true;
     }
 
     void PerspectiveCamera::Move(const glm::vec3& position) {
         m_Position += position;
+        m_UpdateViewMatrix = true;
     }
                                                                 //TODO: Make sure that it doesn't become bad if position is too close to x = 1
-    void PerspectiveCamera::LookAt(const glm::vec3& position) {
-        m_LookingDir = glm::normalize(position - m_Position);
+    void PerspectiveCamera::LookAt(const glm::vec3& position, bool relative) {
+        m_LookingDir = glm::normalize((relative) ? position : position - m_Position);
+        m_UpdateViewMatrix = true;
     }
     
     const glm::vec3& PerspectiveCamera::GetLookAt() const {
@@ -104,23 +110,43 @@ namespace Oxide {
 
     void PerspectiveCamera::UpdatePerspectiveMatrix() { //TODO: Make sure that this is oriented correctly
 
-        float aspect = 1.44f; //TODO: Give the camera access to viewport data somehow
-
-        float S = 1/tan(m_FOV/2);
-        float Sx = S/aspect;
+        float S = 1.0/tan(m_FOV/2.0);
+        float Sx = S / m_Aspect;
         float Sy = S;
 
         float tmp1 = m_Far/(m_Far - m_Near);
-        float tmp2 = 2 * (m_Far * m_Near)/(m_Far - m_Near);
+        float tmp2 = -(m_Far * m_Near)/(m_Far - m_Near);
 
         m_PerspectiveMatrix = glm::mat4(
-            Sx,   0,  0   ,   0,
-            0 ,  Sy,  0   ,   0,
-            0 ,   0,  tmp1,   1,
-            0 ,   0, -tmp2,   0   
+            Sx,   0,    0   ,   0,
+            0 ,  Sy,    0   ,   0,
+            0 ,   0,    tmp1,   1,
+            0 ,   0,    tmp2,   0   
 
         );
-
     }
+
+    Ref<PerspectiveCamera> PerspectiveCamera::Create() {
+        return Ref<PerspectiveCamera>(new PerspectiveCamera());
+    }
+
+    OrthographicCamera::OrthographicCamera() {
+        type = CameraType::Orthographic;
+    }
+
+    void OrthographicCamera::SetNear(const float& near) {return;}
+    void OrthographicCamera::SetFar(const float& far) {return;}
+    const float& OrthographicCamera::GetNear() const {return 0.0f;}
+    const float& OrthographicCamera::GetFar() const {return 0.0f;}
+
+    void OrthographicCamera::SetAspect(const float& aspect) {return;}
+    const float& OrthographicCamera::GetAspect() const {return 0.0f;}
+
+    const glm::vec3& OrthographicCamera::GetPosition() const {return {0, 0, 0};}
+    void OrthographicCamera::SetPosition(const glm::vec3& position) {return;}
+    void OrthographicCamera::Move(const glm::vec3& position) {return;}
+
+    void OrthographicCamera::LookAt(const glm::vec3& position, bool relative) {return;} //Looks at object without rotating around x-axis
+    const glm::vec3& OrthographicCamera::GetLookAt() const {return {0, 0, 0};}
 
 }

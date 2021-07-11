@@ -23,6 +23,8 @@
 #define BIT(x) (1 << x)
 
 namespace Oxide {
+
+	#define PI 3.14159265358979
     
     template<typename T>
 	using Scope = std::unique_ptr<T>;
