@@ -47,10 +47,27 @@ namespace Oxide {
         virtual void AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer) = 0;
         virtual const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const = 0;
 
-        virtual OxideError DrawElements(int count = -1) = 0; //If count is negative, it will draw the maximum number of indices.
-        virtual OxideError DrawArrays(int count = -1) = 0; //If count is negative, it will draw the maximum number of vertices.
+        /**
+         * @brief Draw using an index buffer
+         * 
+         * @param count Number of vertices to draw
+         * @param offset Offset in bytes to first index
+         * @param basevertex Offset to the first element in the vertex array, in count
+         * @return OxideError 
+         */
+        virtual OxideError DrawElements(int count = -1, const size_t offset = 0, const size_t basevertex = 0) = 0; //If count is negative, it will draw the maximum number of indices.
+
+        /**
+         * @brief Draw vertices directly
+         * 
+         * @param count Number of vertices to draw
+         * @param offset Offset to the first element, in count
+         * @return OxideError 
+         */
+        virtual OxideError DrawArrays(int count = -1, size_t offset = 0) = 0; //If count is negative, it will draw the maximum number of vertices.
 
         virtual OxideError BufferData(const size_t size, void* data) = 0;   
+        virtual OxideError SubData(const size_t begin, const size_t size, void* data) = 0;
         virtual OxideError AppendData(const size_t size, void* data) = 0;
         virtual OxideError Allocate(const size_t size) = 0;
         virtual size_t GetBufferSize() const = 0;

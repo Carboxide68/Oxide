@@ -28,7 +28,7 @@ namespace Oxide {
     }
 
     void TextureLibrary::Add(const Ref<Texture2D>& texture) {
-        CO_CORE_ASSERT(!Exists(texture->GetName()), "Texture already exists in library!");
+        if (Exists(texture->GetName())) return;
         m_Texture2Ds[texture->GetName()] = texture;
     }
 

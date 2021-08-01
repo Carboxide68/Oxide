@@ -4,6 +4,14 @@
 
 namespace Oxide {
 
+    void onglerror(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userparam) {
+        if (severity == GL_DEBUG_SEVERITY_HIGH) {
+            CO_CORE_CRITICAL("OpenGL Error! Severity: High | Description: %s", message);
+        } else {
+            CO_CORE_WARN("OpenGL Error! Severity: %s | Description: %s", glewGetString(severity), message);
+        }
+    }
+
     OpenGLRenderer::~OpenGLRenderer() = default;
 
     OpenGLRenderer::OpenGLRenderer() : m_ClearColor(1, 1, 1, 1) {
@@ -16,6 +24,8 @@ namespace Oxide {
             GLenum err = glewInit();
             CO_CORE_ASSERT(err != GLEW_OK, "Something went wrong when initializing glew! Error: %s", glewGetErrorstring(err));
         }
+        TracyGpuContext
+        glDebugMessageCallback(onglerror, NULL);
 
     }
 
@@ -42,7 +52,7 @@ namespace Oxide {
     }
 
     void OpenGLRenderer::EndFrame() {
-
+        TracyGpuCollect
     }
 
     void OpenGLRenderer::ChangeState(CRenderer::RenderSettings setting, bool toggle) {

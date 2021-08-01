@@ -19,6 +19,7 @@ namespace Oxide {
     }
 
     void Scene::f_Initialize() {
+        ZoneScoped
         for (auto actorType : m_Actors) {
             for (auto actor : actorType.second){
                 if (actor == nullptr) continue;
@@ -28,6 +29,7 @@ namespace Oxide {
     }
 
     void Scene::f_EachFrame() {
+        ZoneScoped
         for (auto actorType : m_Actors) {
             for (auto actor : actorType.second){
                 if (actor == nullptr) continue;
@@ -37,9 +39,19 @@ namespace Oxide {
     }
 
     void Scene::f_Draw(std::vector<std::pair<int, std::function<void (void)>>>& drawList) {
+        ZoneScoped
         for (auto renderer : m_Renderers) {
             if (renderer.second == nullptr) continue;
-            drawList.push_back(renderer.second->Queue());
+            auto newdraws = renderer.second->Queue();
+            drawList.insert(drawList.end(), newdraws.begin(), newdraws.end());
         }
+    }
+
+    std::vector<Ref<Actor>> Scene::GetActors(const std::string& name) {
+        return m_Actors[name];
+    }
+
+    Ref<ORenderer> Scene::GetRenderer(const std::string& name) {
+        return m_Renderers[name];
     }
 }

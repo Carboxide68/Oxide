@@ -18,10 +18,11 @@ namespace Oxide {
         void AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer) override;
         const Ref<IndexBuffer>& GetAssociatedIndexBuffer() const override;
 
-        OxideError DrawElements(int count = -1) override; //If count is negative, it will draw the maximum number of indices.
-        OxideError DrawArrays(int count = -1) override; //If count is negative, it will draw the maximum number of vertices.
+        OxideError DrawElements(int count = -1, const size_t offset = 0, const size_t basevertex = 0) override; //If count is negative, it will draw the maximum number of indices.
+        OxideError DrawArrays(int count = -1, const size_t offset = 0) override; //If count is negative, it will draw the maximum number of vertices.
 
         OxideError BufferData(const size_t size, void* data) override;
+        OxideError SubData(const size_t begin, const size_t size, void* data) override;
         OxideError AppendData(const size_t size, void* data) override;
         OxideError Allocate(const size_t size) override;
 

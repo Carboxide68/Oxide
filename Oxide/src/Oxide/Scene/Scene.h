@@ -1,7 +1,6 @@
 #pragma once
 #include "Oxide/Core/Base.h"
 #include "Oxide/Renderer/Camera.h"
-#include "Oxide/Scene/Renderable.h"
 #include "Oxide/Scene/ORenderer.h"
 #include "Oxide/Scene/Actor.h"
 #include <unordered_map>
@@ -20,6 +19,9 @@ namespace Oxide {
     class Scene {
     public:
         const SceneSettings& GetSettings() const;
+
+        std::vector<Ref<Actor>> GetActors(const std::string& name);
+        Ref<ORenderer> GetRenderer(const std::string& name);
         
         static Ref<Scene> CreateScene();
         static Ref<Scene> Create2DScene();

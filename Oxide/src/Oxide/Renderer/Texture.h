@@ -74,4 +74,6 @@ namespace Oxide {
 
     };
 
+    extern TextureLibrary TextureLib;
+
 }

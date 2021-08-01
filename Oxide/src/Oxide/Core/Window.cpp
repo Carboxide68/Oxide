@@ -43,6 +43,9 @@ namespace Oxide {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        #ifdef DEBUG
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+        #endif
 
         m_Window = glfwCreateWindow(m_Properties.width, m_Properties.height, m_Properties.title.c_str(), NULL, NULL);
 
@@ -51,6 +54,7 @@ namespace Oxide {
             const char* desc;
             glfwGetError(&desc);
             CO_ERROR("Window didn't initialize correctly! Error: %s\n", desc);
+            CO_CORE_ASSERT(false, "");
         }
         glfwMakeContextCurrent(m_Window);
 
@@ -90,7 +94,7 @@ namespace Oxide {
     }
 
     void Window::error_callback(int errorCode, const char* description) {
-        CO_ERROR("Something went wrong with glfw!\nError: %s\nError code: %d\n", description, errorCode);
+        CO_CORE_ERROR("Something went wrong with glfw!\nError: %s\nError code: %d\n", description, errorCode);
         return;
     }
 
@@ -103,7 +107,7 @@ namespace Oxide {
     }
 
     const Window* Window::GetWindow(const GLFWwindow* window) {
-        if (!m_WindowInstances.contains((uint64_t)window)) return nullptr;
+        if (m_WindowInstances.find(((uint64_t)window)) == m_WindowInstances.end()) return nullptr;
         return m_WindowInstances[(uint64_t)window];
     }
 

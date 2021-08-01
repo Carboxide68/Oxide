@@ -133,6 +133,9 @@ namespace Oxide {
     OrthographicCamera::OrthographicCamera() {
         type = CameraType::Orthographic;
     }
+    
+    const glm::mat4& OrthographicCamera::GetViewMatrix() {return m_ViewMatrix;}
+    const glm::mat4& OrthographicCamera::GetPerspectiveMatrix() const {return m_PerspectiveMatrix;}
 
     void OrthographicCamera::SetNear(const float& near) {return;}
     void OrthographicCamera::SetFar(const float& far) {return;}

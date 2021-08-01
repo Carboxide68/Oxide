@@ -1,6 +1,7 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include "Oxide/Core/Log.h"
+#include "Platform/OpenGL/OpenGLCommon.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -43,40 +44,46 @@ namespace Oxide {
     }
 
     void OpenGLShader::SetUniform(const std::string& name, const bool& value) {
-        Bind();
+        ZoneScopedN("Uniformb")
         glUniform1i(GetUniformLocation(name), value);
     }
     void OpenGLShader::SetUniform(const std::string& name, const int& value) {
-        Bind();
+        ZoneScopedN("Uniformi")
         glUniform1i(GetUniformLocation(name), value);
     }
+    void OpenGLShader::SetUniform(const std::string& name, const uint& value) {
+        ZoneScopedN("Uniformui")
+        glUniform1ui(GetUniformLocation(name), value);
+    }
     void OpenGLShader::SetUniform(const std::string& name, const float& value) {
-        Bind();
+        ZoneScopedN("Uniformf")
         glUniform1f(GetUniformLocation(name), value);
     }
     void OpenGLShader::SetUniform(const std::string& name, const glm::vec2& value) {
-        Bind();
+        ZoneScopedN("Uniformf2")
         glUniform2f(GetUniformLocation(name), value.x, value.y);
     }
     void OpenGLShader::SetUniform(const std::string& name, const glm::vec3& value) {
-        Bind();
+        ZoneScopedN("Uniformf3")
         glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
     }
     void OpenGLShader::SetUniform(const std::string& name, const glm::vec4& value) {
-        Bind();
+        ZoneScopedN("Uniformf4")
         glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
     }
     void OpenGLShader::SetUniform(const std::string& name, const glm::mat4& value) {
-        Bind();
+        ZoneScopedN("Uniform4x4")
         glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
     }
 
     int32_t OpenGLShader::GetUniformLocation(const std::string& name) {
+        ZoneScopedN("Uniform location")
         return glGetUniformLocation(m_ProgramID, name.c_str());
     }
 
     void OpenGLShader::ReadShaders(const std::string& filePath) {
 
+        ZoneScopedN("Read Shader");
         std::ifstream file(filePath);
 
         std::string fileContents;
@@ -87,7 +94,7 @@ namespace Oxide {
             file.close();
             fileContents = ss.str();
         } else {
-            CO_CORE_INFO("Couldn't fint load file: %s", filePath.c_str());
+            CO_CORE_INFO("Couldn't find shader load file: %s", filePath.c_str()); 
             return;
         }
 
@@ -98,6 +105,7 @@ namespace Oxide {
     }
 
     std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& fileContent, std::unordered_map<GLenum, std::string>& splitFile) {
+        ZoneScopedN("Preprocess shader")
         uint pos = 0;
         GLenum curShaderType = GL_FALSE;
         while (pos < fileContent.size()) {
@@ -126,7 +134,8 @@ namespace Oxide {
     }
     
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& splitFile) { //TODO: Fix more shader types
-
+        ZoneScopedN("Compile shader")
+        TracyGpuZone("Compile shader")
         bool usingGeom = splitFile.find(GL_GEOMETRY_SHADER) != splitFile.end();
 
         if (splitFile.find(GL_VERTEX_SHADER) == splitFile.end()) {
@@ -158,7 +167,7 @@ namespace Oxide {
             GLsizei log_length = 0;
             GLchar message[1024];
             glGetShaderInfoLog(vShader, 1024, &log_length, message);
-            CO_CORE_ERROR("Vertex error:\n", message);
+            CO_CORE_ERROR("Vertex error: %s\n", message);
         }
 
         glCompileShader(fShader);
@@ -168,7 +177,7 @@ namespace Oxide {
             GLsizei log_length = 0;
             GLchar message[1024];
             glGetShaderInfoLog(fShader, 1024, &log_length, message);
-            CO_CORE_ERROR("Fragment error:\n", message);
+            CO_CORE_ERROR("Fragment error: %s\n", message);
         }
 
         m_ProgramID = glCreateProgram();
@@ -183,7 +192,7 @@ namespace Oxide {
                 GLsizei log_length = 0;
                 GLchar message[1024];
                 glGetShaderInfoLog(gShader, 1024, &log_length, message);
-                CO_CORE_ERROR("Geometry error:\n", message);
+                CO_CORE_ERROR("Geometry error: %s\n", message);
             }
             glAttachShader(m_ProgramID, gShader);
         }
@@ -196,7 +205,7 @@ namespace Oxide {
             GLsizei log_length = 0;
             GLchar message[1024];
             glGetProgramInfoLog(m_ProgramID, 1024, &log_length, message);
-            CO_CORE_ERROR("Program linkingrror:\n", message);
+            CO_CORE_ERROR("Program linkingrror: %s\n", message);
         }
         glDeleteShader(vShader);
         glDeleteShader(fShader);

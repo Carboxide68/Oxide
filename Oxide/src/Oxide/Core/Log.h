@@ -20,14 +20,14 @@ namespace Oxide {
 	};
 }
 
-#define CO_CORE_TRACE(...)      Oxide::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define CO_CORE_INFO(...)       Oxide::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define CO_CORE_WARN(...)       Oxide::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define CO_CORE_ERROR(...)      Oxide::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define CO_CORE_CRITICAL(...)   Oxide::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define CO_CORE_TRACE(...)      {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetCoreLogger()->trace(s);		}
+#define CO_CORE_INFO(...)       {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetCoreLogger()->info(s);		}
+#define CO_CORE_WARN(...)       {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetCoreLogger()->warn(s);		}
+#define CO_CORE_ERROR(...)      {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetCoreLogger()->error(s);		}
+#define CO_CORE_CRITICAL(...)   {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetCoreLogger()->critical(s);	}
 
-#define CO_INFO(...)            Oxide::Log::GetClientLogger()->info(__VA_ARGS__)
-#define CO_WARN(...)            Oxide::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define CO_TRACE(...)           Oxide::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define CO_ERROR(...)           Oxide::Log::GetClientLogger()->error(__VA_ARGS__)
-#define CO_CRITICAL(...)        Oxide::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define CO_TRACE(...)           {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetClientLogger()->trace(s);		}
+#define CO_INFO(...)            {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetClientLogger()->info(s);		}
+#define CO_WARN(...)            {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetClientLogger()->warn(s);		}
+#define CO_ERROR(...)           {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetClientLogger()->error(s);		}
+#define CO_CRITICAL(...)        {char s[1024]; snprintf(s, 1023, __VA_ARGS__); Oxide::Log::GetClientLogger()->critical(s);	}

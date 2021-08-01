@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Oxide/Core/Base.h"
+#include "Platform/OpenGL/OpenGLCommon.h"
 #include "Oxide/Renderer/Texture.h"
 
 typedef uint32_t GLenum;

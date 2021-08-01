@@ -26,6 +26,7 @@ namespace Oxide {
 
         virtual void SetUniform(const std::string& name, const bool& value) override;
         virtual void SetUniform(const std::string& name, const int& value) override;
+        virtual void SetUniform(const std::string& name, const uint& value) override;
         virtual void SetUniform(const std::string& name, const float& value) override;
         virtual void SetUniform(const std::string& name, const glm::vec2& value) override;
         virtual void SetUniform(const std::string& name, const glm::vec3& value) override;

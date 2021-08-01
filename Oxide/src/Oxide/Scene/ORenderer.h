@@ -1,20 +1,24 @@
 #pragma once
 #include "Oxide/Core/Base.h"
-#include "Oxide/Scene/Renderable.h"
+
+#define RENDERER_ESSENTIALS(__ClassName__) private: friend Oxide::Scene; __ClassName__(){return;}
 
 namespace Oxide {
 
+    class Scene;
+
     class ORenderer {
     public:
-        virtual void Draw(const Ref<Renderable> renderable);
-        virtual std::pair<int, std::function<void (void)>> Queue();
+        virtual std::vector<std::pair<int, std::function<void (void)>>> Queue() = 0;
 
-        std::string TypeName;
+        const std::string TypeName;
 
-    private:
+    protected:
 
-        friend class Scene;
- 
+        Scene* m_ParentScene;
+        friend Scene;
+        ORenderer(Scene* parentScene) : m_ParentScene(parentScene){return;}
+
     };
 
 }

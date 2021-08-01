@@ -1,4 +1,5 @@
 #pragma once
+#include "Platform/OpenGL/OpenGLCommon.h"
 #include "Oxide/Renderer/CRenderer.h"
 #include <glm/vec4.hpp>
 

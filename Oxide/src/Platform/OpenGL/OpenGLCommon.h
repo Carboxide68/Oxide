@@ -2,6 +2,7 @@
 
 #include "Oxide/Core/Base.h"
 #include <GL/glew.h>
+#include <tracy/TracyOpenGL.hpp>
 
 namespace Oxide {
 

@@ -19,7 +19,6 @@ namespace Oxide {
 
         m_ChangeScene();
         while (window.BeginFrame()) {
-
             m_ActiveScene->f_EachFrame();
             m_ActiveScene->f_Draw(m_Draws);
 
@@ -29,6 +28,7 @@ namespace Oxide {
             }
 
             window.EndFrame();
+            FrameMark
             if (m_ShouldChangeScene) {
                 m_ChangeScene();
                 m_ShouldChangeScene = 0;
@@ -50,15 +50,16 @@ namespace Oxide {
         return Scope<Renderer>(new Renderer());
     }
 
-    Renderer::Renderer() {
+    void Renderer::Init() {
+        window.Init();
+        window.UpdateSettings(WindowSet);
+    }
 
+    Renderer::Renderer() {
+        m_Draws.reserve(100);
         ActiveScene = Scene::CreateScene();
         m_ActiveScene = ActiveScene;
         WindowSet = m_LoadWindowSettings();
-        window.Init();
-        window.UpdateSettings(WindowSet);
-        //Add way to push settings to renderer
-        // Window.renderer->
     }
 
 }

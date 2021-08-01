@@ -18,6 +18,9 @@ namespace Oxide {
 
         virtual ~Camera() = default;
 
+        virtual const glm::mat4& GetViewMatrix() = 0;
+        virtual const glm::mat4& GetPerspectiveMatrix() const = 0;
+
         virtual void SetNear(const float& near) = 0;
         virtual void SetFar(const float& far) = 0;
         virtual const float& GetNear() const = 0;
@@ -40,8 +43,8 @@ namespace Oxide {
     class PerspectiveCamera : public Camera {
     public:
         
-        const glm::mat4& GetViewMatrix();
-        const glm::mat4& GetPerspectiveMatrix() const;
+        const glm::mat4& GetViewMatrix() override;
+        const glm::mat4& GetPerspectiveMatrix() const override;
 
         float GetFOV() const;
         const float& GetFOVRadians() const;
@@ -89,6 +92,9 @@ namespace Oxide {
     public:
         OrthographicCamera();
 
+        const glm::mat4& GetViewMatrix() override;
+        const glm::mat4& GetPerspectiveMatrix() const override;
+
         void SetNear(const float& near) override;
         void SetFar(const float& far) override;
         const float& GetNear() const override;
@@ -108,6 +114,8 @@ namespace Oxide {
 
     private:
 
+        glm::mat4 m_ViewMatrix;
+        glm::mat4 m_PerspectiveMatrix;
 
     };
 }

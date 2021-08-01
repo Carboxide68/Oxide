@@ -1,5 +1,6 @@
 
 #include "Platform/OpenGL/OpenGLTexture.h"
+#include "Oxide/Core/Log.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
@@ -9,32 +10,8 @@ namespace Oxide {
 
     OpenGLTexture2D::OpenGLTexture2D(const std::string& imagePath) {
         m_Settings = TextureSettings::STANDARD_SETTING;
-        int x, y, channels;
-        unsigned char *data = stbi_load(imagePath.c_str(), &x, &y, &channels, 0);
-
-        m_Width = (uint32_t)x;
-        m_Height = (uint32_t)y;
-
-        CO_CORE_ASSERT(data, "Failed to load image %s!", imagePath);
-
-        if (channels == 3) {
-            m_InternalFormat = GL_RGB8;
-            m_DataFormat = GL_RGB;
-        } else if (channels == 4) {
-            m_InternalFormat = GL_RGBA8;
-            m_DataFormat = GL_RGBA;
-        } else if (channels == 1) {
-            m_InternalFormat = GL_R8;
-            m_DataFormat = GL_RED;
-        }
-
         glGenTextures(1, &m_RendererID);
-        glBindTexture(GL_TEXTURE_2D, m_RendererID);
-        glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, (GLsizei)m_Width, (GLsizei)m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, data);
-        UpdateSettings();
-
-        stbi_image_free(data);
-
+        Load(imagePath);
     }
 
     OpenGLTexture2D::OpenGLTexture2D(const uint32_t& width, const uint32_t& height) : m_Width(width), m_Height(height) {
@@ -62,6 +39,9 @@ namespace Oxide {
 
     void OpenGLTexture2D::UpdateSettings() {
 
+        ZoneScoped
+        
+        TracyGpuZone("UpdateTexSettings")
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
         switch (m_Settings.WrapType) {
@@ -155,7 +135,38 @@ namespace Oxide {
     }
 
     void OpenGLTexture2D::Load(const std::string& imagePath) {
-        
+        ZoneScopedN("LoadTexture")
+
+        int x, y, channels;
+        unsigned char *data;
+        {
+        ZoneScopedN("stbi_load")
+        data = stbi_load(imagePath.c_str(), &x, &y, &channels, 0);
+        }
+        m_Width = (uint32_t)x;
+        m_Height = (uint32_t)y;
+
+        if (!data) {
+            CO_CORE_WARN("Failed to load image %s!", imagePath.c_str());
+            return;
+        }
+
+        if (channels == 3) {
+            m_InternalFormat = GL_RGB8;
+            m_DataFormat = GL_RGB;
+        } else if (channels == 4) {
+            m_InternalFormat = GL_RGBA8;
+            m_DataFormat = GL_RGBA;
+        } else if (channels == 1) {
+            m_InternalFormat = GL_R8;
+            m_DataFormat = GL_RED;
+        }
+        TracyGpuZone("TexImage")
+        glBindTexture(GL_TEXTURE_2D, m_RendererID);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, (GLsizei)m_Width, (GLsizei)m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, data);
+        UpdateSettings();
+
+        stbi_image_free(data);
     }
 
 }

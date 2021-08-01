@@ -10,7 +10,7 @@ namespace Oxide {
 
     template<Derived<Oxide::ORenderer> T>
     Ref<T> Scene::AddRenderer() {
-        Ref<T> newRenderer = Ref<T>(new T());
+        Ref<T> newRenderer = Ref<T>(new T(this));
         m_Renderers[newRenderer->TypeName] = newRenderer;
         return newRenderer;
     }

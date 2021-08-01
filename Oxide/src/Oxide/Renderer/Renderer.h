@@ -9,9 +9,17 @@ namespace Oxide {
     class Renderer {
     public:
 
+
         void Start();
         void ChangeScene(); //There's a private member that is the scene that it's actually working on. This makes the user able to make ActiveScene point to something new, and then call
                             //ChangeScene to update things accordingly i.e calling the initialization functions etc.
+
+        /**
+         * @brief Initialize window etc. Must be ran before anything else
+         * 
+         * 
+         */
+        void Init();
 
         Ref<Scene> ActiveScene;
         static Scope<Renderer> Create();

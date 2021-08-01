@@ -2,7 +2,7 @@
 
 #include "Oxide/Core/Base.h"
 #include "Oxide/Renderer/Renderer.h"
-#include "cmath"
+#include <cmath>
 
 namespace Oxide {
 
@@ -59,6 +59,9 @@ namespace Oxide {
                         case OxideEvent::KEY_SPACE:
                             movement.y = 0;
                             break;
+                        case OxideEvent::KEY_LEFT_ALT:
+                            glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_FILL : GL_LINE);
+                            wireframe = !wireframe;
                         case OxideEvent::KEY_I:
                             movementspeed += 0.3;
                             break;
@@ -104,7 +107,6 @@ namespace Oxide {
                 double part = 2.0 * PI;
                 double xdiff = (xpos - lastx);
                 double ydiff = -(ypos - lasty);
-                float FOV;
                 xangle = xangle + xdiff * sensitivity;
                 xangle = (xangle < 0) ? part - xangle : fmod(xangle, part);
                 yangle = fmin(fmax(yangle + ydiff * sensitivity, -PI/2.0 + 0.2), PI/2.0 - 0.2);
@@ -135,7 +137,7 @@ namespace Oxide {
             }
         }
 
-        std::string TypeName = "DebugCamera";
+        const std::string TypeName = "DebugCamera";
 
         glm::vec3 movement;
         const glm::vec3* movementDir;
@@ -144,12 +146,13 @@ namespace Oxide {
         const float constant = 0.01f;
         bool activemouse = true;
 
-        float FOV;
+        float FOV = 90.0f;
 
         double sensitivity = 2.0 * PI/2560.0;
-        double lastx, lasty;
-        float xangle, yangle;
+        double lastx, lasty = 0.0f;
+        float xangle, yangle = 0.0f;
         bool lookingChanged = true;
+        bool wireframe = false;
 
         PerspectiveCamera* camera;
 

@@ -14,12 +14,11 @@ namespace Oxide {
         virtual void OnStart() = 0;
         virtual void EachFrame() = 0;
 
-        std::string TypeName;
+        const std::string TypeName;
     
     protected:
         friend Oxide::Scene;
         Actor() {return;}
 
     };
-
 }

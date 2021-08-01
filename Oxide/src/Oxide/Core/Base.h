@@ -4,6 +4,9 @@
 #include <signal.h>
 #include <functional>
 #include <iostream>
+#include <tracy/Tracy.hpp>
+
+constexpr double PI = 3.14159265358979;
 
 #ifdef CO_DEBUG
     #define CO_DEBUGBREAK() raise(SIGTRAP)
@@ -24,7 +27,6 @@
 
 namespace Oxide {
 
-	#define PI 3.14159265358979
     
     template<typename T>
 	using Scope = std::unique_ptr<T>;
