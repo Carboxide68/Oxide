@@ -21,11 +21,12 @@ namespace Oxide {
          */
         void Init();
 
-        Ref<Scene> ActiveScene;
         static Scope<Renderer> Create();
 
-        SceneSettings SceneSet;
-        WindowSettings WindowSet;
+        Ref<Scene> scene;
+        SceneSettings sceneSet;
+        WindowSettings windowSet;
+        CRenderer* crenderer;
         Window window;
 
     private:

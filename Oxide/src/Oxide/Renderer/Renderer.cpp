@@ -60,6 +60,7 @@ namespace Oxide {
         ActiveScene = Scene::CreateScene();
         m_ActiveScene = ActiveScene;
         WindowSet = m_LoadWindowSettings();
+        crenderer = window.renderer.get();
     }
 
 }

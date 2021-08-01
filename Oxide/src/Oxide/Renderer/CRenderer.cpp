@@ -1,27 +1,56 @@
 #include "Oxide/Renderer/CRenderer.h"
-#include "Platform/OpenGL/OpenGLRenderer.h"
+#include "Oxide/Core/Log.h"
+#include <GL/glew.h>
 
 namespace Oxide {
 
-    CRenderer::API CRenderer::s_API = CRenderer::API::OpenGL;
-
-    Scope<CRenderer> CRenderer::Create() {
-
-        switch (s_API) {
-            case CRenderer::API::OpenGL: return CreateScope<OpenGLRenderer>();
-            case CRenderer::API::None: CO_CORE_ASSERT(false, "RendererAPI::None is currently not supported"); return nullptr;
+    void onglerror(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userparam) {
+        if (severity == GL_DEBUG_SEVERITY_HIGH) {
+            CO_CORE_CRITICAL("OpenGL Error! Severity: High | Description: %s", message);
         }
+    }
 
-        CO_CORE_ASSERT(false, "This RendererAPI does not exist!");
-        return nullptr;
+    CRenderer::~CRenderer() = default;
+
+    CRenderer::CRenderer() : m_ClearColor(1, 1, 1, 1) {
 
     }
 
-    void CRenderer::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
-        SetViewport({x, y, width, height});
+    void CRenderer::Init() {
+
+        {
+            GLenum err = glewInit();
+            CO_CORE_ASSERT(err != GLEW_OK, "Something went wrong when initializing glew! Error: %s", glewGetErrorstring(err));
+        }
+        TracyGpuContext
+        glDebugMessageCallback(onglerror, NULL);
+
     }
 
-    void CRenderer::SetClearColor(const glm::vec4& color) {
-        SetClearColor(color.x, color.y, color.z, color.w);
+    void CRenderer::SetViewport(CRenderer::Viewport viewport) {
+
+        glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+
     }
+
+    void CRenderer::SetViewport(uint32_t width, uint32_t height) { 
+        glViewport(0, 0, width, height);
+    }
+
+    void CRenderer::SetClearColor(const float& r, const float& g, const float& b, const float& a) {
+        glClearColor(r, g, b, a);
+    }
+
+    void CRenderer::ClearBuffers() {
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    }
+
+    void CRenderer::BeginFrame() {
+        ClearBuffers();
+    }
+
+    void CRenderer::EndFrame() {
+        TracyGpuCollect
+    }
+
 }

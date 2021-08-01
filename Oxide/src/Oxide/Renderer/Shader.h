@@ -1,65 +1,52 @@
 #pragma once
 
-#include "Oxide/Core/Base.h"
-
 #include <string>
-#include <unordered_map>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
+#include "Oxide/Renderer/OpenGLCommon.h"
 
-namespace Oxide  {
+namespace Oxide {
 
-    class Shader {
+	class Shader {
 
-    public:
+	public:
 
-        virtual ~Shader() = default;
+		~Shader();
 
-        virtual const std::string& GetName() const = 0;
+        const std::string& GetName() const;
 
-        virtual void Bind() = 0;
-        virtual void Unbind() = 0;
+		void Bind();
+        void Unbind();
 
-        virtual void SetUniform(const std::string& name, const bool& value) = 0;
-        virtual void SetUniform(const std::string& name, const int& value) = 0;
-        virtual void SetUniform(const std::string& name, const uint& value) = 0;
-        virtual void SetUniform(const std::string& name, const float& value) = 0;
-        virtual void SetUniform(const std::string& name, const glm::vec2& value) = 0;
-        virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
-        virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;
-        virtual void SetUniform(const std::string& name, const glm::mat4& value) = 0;
-        // virtual void SetUniform(const Ref<Texture2D> texture) = 0;
+        void SetUniform(const std::string& name, const bool& value);
+        void SetUniform(const std::string& name, const int& value);
+        void SetUniform(const std::string& name, const uint& value);
+        void SetUniform(const std::string& name, const float& value);
+        void SetUniform(const std::string& name, const glm::vec2& value);
+        void SetUniform(const std::string& name, const glm::vec3& value);
+        void SetUniform(const std::string& name, const glm::vec4& value);
+        void SetUniform(const std::string& name, const glm::mat4& value);
 
-        // template <class T>
-        // inline void SetUniform(const Uniform<T>& uniform) const {SetUniform(uniform.GetName(), uniform.GetValue());}
-        // template <class T>
-        // inline void SetUniform(const Uniform<T>* uniform) const {SetUniform(uniform->GetName(), uniform->GetValue());}
-        
-        // inline void SetUniform(const UniformShell* uniform) const {uniform->SetUniform(this);}
+		inline uint32_t GetHandle() {return m_ProgramID;}
 
-        static Ref<Shader> Create(const std::string& name, const std::string& filePath);
-        static Ref<Shader> Create(const std::string& filePath);
+		static Ref<Shader> Create(const std::string& name, const std::string& filePath);
+		static Ref<Shader> Create(const std::string& filePath);
 
-    };
+	private:
 
-    class ShaderLibrary {
-    public:
+		Shader(const std::string& name, const std::string& filePath);
 
-        void Add(const std::string& name, const Ref<Shader>& shader);
-        void Add(const Ref<Shader>& shader);
+		Shader(const std::string& filePath);
 
-        Ref<Shader> Load(const std::string& name, const std::string& filepath);
+		void ReadShaders(const std::string& filePath);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& fileContent, std::unordered_map<GLenum, std::string>& splitFile);
+		void Compile(const std::unordered_map<GLenum, std::string>& sources);
 
-        Ref<Shader> Get(const std::string& name);
+		int32_t GetUniformLocation(const std::string& name);
 
-        bool Exists(const std::string& name) const;
+		std::string m_Name;
+		std::unordered_map<std::string, int32_t> m_UniformLocations;
+		uint32_t m_ProgramID;
 
-    private:
-
-        std::unordered_map<std::string, Ref<Shader>> m_ShaderReferences;
-
-    };
+	};
 
 }
