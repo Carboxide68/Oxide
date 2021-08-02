@@ -178,7 +178,7 @@ namespace Oxide {
     }
 
     Ref<VertexBuffer> VertexBuffer::Create() {
-        return CreateRef(new VertexBuffer());
+        return CreateRef<VertexBuffer>(new VertexBuffer());
     }
 
     IndexBuffer::IndexBuffer() {
@@ -249,7 +249,7 @@ namespace Oxide {
 
 
     Ref<IndexBuffer> IndexBuffer::Create() {
-        return CreateRef(new IndexBuffer());
+        return CreateRef<IndexBuffer>(new IndexBuffer());
     }
 
 }
