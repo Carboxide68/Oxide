@@ -14,8 +14,8 @@ namespace Oxide {
         m_VertexBuffer = VertexBuffer::Create();
         m_IndexBuffer = IndexBuffer::Create();
         m_VertexBuffer->AssociateIndexBuffer(m_IndexBuffer);
-        m_IndexBuffer->Allocate(1000000);
-        m_VertexBuffer->Allocate(10000000);
+        m_IndexBuffer->Alloc(1000000);
+        m_VertexBuffer->Alloc(10000000);
 
         m_Shader = Shader::Create("Oxide/src/Oxide/Resource/MeshShader.os");
         m_IdLookup.reserve(1000);
@@ -116,19 +116,22 @@ namespace Oxide {
         if (m_VertexbufferHead != 0) {
             size_t populated_buffer_size = 0;
             for (auto i = m_IdLookup.begin(); i < m_IdLookup.end(); i++) {
-                populated_buffer_size += i->second - i->first;
+                populated_buffer_size += i->second.VertexBufferLocation.second - i->second.VertexBufferLocation.first;
             }
             if (populated_buffer_size/m_VertexbufferHead < m_MinPercentPopulated) {
                 CleanBuffers();
             }
         }
         return {{0, [&](void) ->  void {
+            m_VertexBuffer->BufferLayout = {{sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::None, 0}, {sizeof(float), OxideType::None, 0}};
+            m_VertexBuffer->UpdateLayout();
             Ref<Camera> camera = m_ParentScene->camera;
             ZoneScopedN("Draw meshes");
             m_VertexBuffer->Bind();
             for (uint draw : m_Draws) {
                 ZoneScopedN("Draw Mesh")
                 DrawObject& object = m_IdLookup[draw];
+                if (!object.enabled) continue;
                 m_Shader->Bind();
                 object.Material.SetUniforms(m_Shader);
                 m_Shader->SetUniform("uAssembledMatrix", camera->GetPerspectiveMatrix() * camera->GetViewMatrix() * object.ModelMatrix);
@@ -137,22 +140,23 @@ namespace Oxide {
 
                 size_t vertexSize = 1;
                 
+                m_VertexBuffer->EnableAttrib(0);
                 switch (object.DataProps) {
                     case 0:
-                        m_VertexBuffer->SetBufferLayout({{sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::None, 0}, {sizeof(float), OxideType::None, 0}});
-                        vertexSize = 3;
+                        m_VertexBuffer->DisableAttrib(1);
+                        m_VertexBuffer->DisableAttrib(2);
                         break;
                     case 1: //Only using normals
-                        m_VertexBuffer->SetBufferLayout({{sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::None, 0}});
-                        vertexSize = 6;
+                        m_VertexBuffer->EnableAttrib(1);
+                        m_VertexBuffer->DisableAttrib(2);
                         break;
                     case 2: //Only using TexCoords
-                        m_VertexBuffer->SetBufferLayout({{sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::None, 0}, {sizeof(float), OxideType::Float, 2}});
-                        vertexSize = 5;
+                        m_VertexBuffer->DisableAttrib(1);
+                        m_VertexBuffer->EnableAttrib(2);
                         break;
                     case 3: //Using both
-                        m_VertexBuffer->SetBufferLayout({{sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::Float, 3}, {sizeof(float), OxideType::Float, 2}});
-                        vertexSize = 8;
+                        m_VertexBuffer->EnableAttrib(1);
+                        m_VertexBuffer->EnableAttrib(2);
                         break;
                     default:
                         CO_CORE_WARN("DataProps in MeshRenderer weren't the expected value!");

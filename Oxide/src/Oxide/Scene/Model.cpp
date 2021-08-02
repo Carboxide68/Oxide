@@ -1,7 +1,7 @@
 
 #include "Oxide/Core/Log.h"
 #include "Oxide/Scene/Model.h"
-#include "Platform/OpenGL/OpenGLCommon.h"
+#include "Oxide/Renderer/OpenGLCommon.h"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/material.h>

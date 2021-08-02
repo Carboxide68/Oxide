@@ -51,6 +51,7 @@ namespace Oxide {
             char DrawMode = 1; /* 0: Indexed; 1: Arrays */
             uint DrawCount = 0;
             char DataProps = 0;
+            bool enabled = true;
         };
 
         MeshRenderer(Scene* scene);
