@@ -28,7 +28,7 @@ namespace Oxide {
         m_Properties = settings;
         glfwSetWindowTitle(m_Window, settings.title.c_str());
         glfwSetWindowSize(m_Window, settings.width, settings.height);
-        glfwSwapInterval((settings.VSync) ? 1 : 0);
+        glfwSwapInterval(settings.VSync);
     }
 
     void Window::m_Init() {
@@ -43,9 +43,7 @@ namespace Oxide {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        #ifdef DEBUG
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-        #endif
 
         m_Window = glfwCreateWindow(m_Properties.width, m_Properties.height, m_Properties.title.c_str(), NULL, NULL);
 
@@ -68,7 +66,7 @@ namespace Oxide {
         renderer = CRenderer::Create();
         renderer->Init();
 
-        renderer->SetViewport(0, 0, m_Properties.width, m_Properties.height);
+        renderer->SetViewport({0, 0, m_Properties.width, m_Properties.height});
         glfwSetKeyCallback(m_Window, KeyCallback);
         glfwSetMouseButtonCallback(m_Window, MouseButtonCallback);
         glfwSetCursorPosCallback(m_Window, CursorPosCallback);

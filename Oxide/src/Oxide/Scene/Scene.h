@@ -12,6 +12,7 @@ namespace Oxide {
 
     template<class U, class T>
     concept Derived = std::is_base_of<T, U>::value;
+    
     struct SceneSettings {
         int tmp;
     };

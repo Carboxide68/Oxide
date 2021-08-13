@@ -5,8 +5,8 @@ flags = -std=c++2a -Wall -Wno-unused-function
 Cflags = -Wall -Wno-unused-function -O2 -march=native
 
 includes := $(addprefix -I ,$(includes))
-additionalFiles =
-dirs := $(dir $(shell find src/ -name "*.cpp" -o -name "*.c"))
+additionalDirs = vendor/tracy/ vendor/imgui/
+dirs := $(dir $(shell find src/ -name "*.cpp" -o -name "*.c")) $(additionalDirs)
 objFiles := $(patsubst %.cpp, %.o, $(addprefix $(buildDir), $(notdir $(foreach dir, $(dirs), $(wildcard $(dir)*.cpp))))) $(patsubst %.c, %.o, $(addprefix $(buildDir), $(notdir $(foreach dir, $(dirs), $(wildcard $(dir)*.c)))))
 
 CC = g++

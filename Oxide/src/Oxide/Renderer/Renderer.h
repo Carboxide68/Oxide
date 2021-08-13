@@ -23,6 +23,13 @@ namespace Oxide {
 
         static Scope<Renderer> Create();
 
+        /**
+         * @brief Returns the time in milliseconds
+         * 
+         * @return double 
+         */
+        double GetTime() {return glfwGetTime()/1000.0;}
+
         Ref<Scene> scene;
         SceneSettings sceneSet;
         WindowSettings windowSet;

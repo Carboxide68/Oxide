@@ -6,12 +6,118 @@
 
 namespace Oxide {
 
+    Ref<Buffer> Buffer::Create(GLenum bufferType, GLenum bufferUse) {
+        return Ref<Buffer>(new Buffer(bufferType, bufferUse));
+    }
 
-    //Initializing function variables
-    VertexBuffer::VertexBuffer() {
+    Buffer::Buffer(GLenum bufferType, GLenum bufferUse) {
+
+        m_BufferType = bufferType;
+        m_BufferUse = bufferUse;
 
         glGenBuffers(1, &m_RendererID);
-        m_VAO = CreateRef<OpenGLVertexArray>();
+        glBindBuffer(m_BufferType, m_RendererID);
+
+    }
+
+    Buffer::~Buffer() {
+        glDeleteBuffers(1, &m_RendererID);
+    }
+
+    void Buffer::Bind() {
+        glBindBuffer(m_BufferType, m_RendererID);
+    }
+
+    OxideError Buffer::BufferData(const size_t size, void* data) {
+
+        Bind();        
+        glBufferData(m_BufferType, size, data, m_BufferUse);
+        m_BufferSize = size;
+        return OxideError::OK;
+
+    }
+
+    OxideError Buffer::SubData(const size_t begin, const size_t size, void* data) {
+        if (begin + size > m_BufferSize) {
+            CO_CORE_ERROR("[Buffer::SubData] Tried to write data outside of buffer! Use Alloc first!");
+            return OxideError::Error;
+        }
+        Bind();
+        long int pos = begin;
+        glBufferSubData(m_BufferType, pos, size, data);
+        return OxideError::OK;
+    }
+
+    OxideError Buffer::AppendData(const size_t size, void* data) {
+
+        Bind();
+        if ((bufferPosition + size) > m_BufferSize) {
+            Alloc((bufferPosition + size) * 1.5);
+        }
+        long int pos = bufferPosition;
+        glBufferSubData(m_BufferType, pos, size, data);
+        bufferPosition += size;
+        return OxideError::OK;
+
+    }
+
+    OxideError Buffer::Alloc(const size_t size) {
+        
+        if (size < m_BufferSize) return OxideError::Error;
+        if (bufferPosition == 0 || m_BufferSize == 0) {
+            Bind();
+            glBufferData(m_BufferType, size, nullptr, m_BufferUse);
+            m_BufferSize = size;
+            return OxideError::OK;            
+        }
+        TracyGpuZone("Allocation")
+        uint newBuffer = 0;
+        glGenBuffers(1, &newBuffer);
+        glBindBuffer(m_BufferType, newBuffer);
+        glBufferData(m_BufferType, size, NULL, m_BufferUse);
+        
+        glBindBuffer(GL_COPY_READ_BUFFER, m_RendererID);
+        glCopyBufferSubData(GL_COPY_READ_BUFFER, m_BufferType, 0, 0, bufferPosition);
+        glDeleteBuffers(1, &m_RendererID);
+        glBindBuffer(GL_COPY_READ_BUFFER, 0);
+        
+        m_RendererID = newBuffer;
+        m_BufferSize = size;
+
+        return OxideError::OK;
+    }
+
+    size_t Buffer::GetBufferSize() const {
+        return m_BufferSize;
+    }
+
+    OxideError Buffer::CopyData(Ref<Buffer> other, size_t buffer0_offset, size_t buffer1_offset, size_t size) {
+        if ((size + buffer0_offset) > m_BufferSize || (size + buffer1_offset) > other->m_BufferSize) {
+            CO_CORE_WARN("[Buffer::CopyData] Bytes + offset can't be bigger than either of the buffers!");
+            return OxideError::Error;
+        }
+
+        TracyGpuZone("Copy")
+        glBindBuffer(GL_COPY_READ_BUFFER, m_RendererID);
+        glBindBuffer(GL_COPY_WRITE_BUFFER, other->m_RendererID);
+        glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, (long int) buffer0_offset, (long int) buffer1_offset, (long int) size);
+
+        return OxideError::OK;
+    }
+
+    Ref<VertexBuffer> VertexBuffer::Create() {
+        return Ref<VertexBuffer>(new VertexBuffer());
+    }
+    
+    Ref<VertexBuffer> VertexBuffer::Create(uint handle, size_t buffersize) {
+        return Ref<VertexBuffer>(new VertexBuffer(handle, buffersize));
+    }
+
+    //Initializing function variables
+    VertexBuffer::VertexBuffer() : Buffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW) {
+
+        glGenBuffers(1, &m_RendererID);
+        m_VAO = CreateRef<VertexArray>();
 
         m_VAO->Bind();
         glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
@@ -23,9 +129,23 @@ namespace Oxide {
 
     }
 
+    VertexBuffer::VertexBuffer(uint handle, size_t buffersize) : Buffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW) {
+
+        m_RendererID = handle;
+        m_VAO = CreateRef<VertexArray>();
+
+        m_VAO->Bind();
+        glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+        m_VAO->Unbind();
+        m_IndexBuffer = nullptr;
+
+        m_BufferSize = buffersize;
+
+    }
+
     VertexBuffer::~VertexBuffer() {
 
-        glDeleteBuffers(1, &m_RendererID);
+        this->~Buffer();
 
     }
 
@@ -46,7 +166,7 @@ namespace Oxide {
 
     }
 
-    const Ref<IndexBuffer>& VertexBuffer::GetAssociatedIndexBuffer() const {
+    Ref<IndexBuffer> VertexBuffer::GetAssociatedIndexBuffer() const {
         return m_IndexBuffer;
     }
 
@@ -81,175 +201,56 @@ namespace Oxide {
 
     }
 
-    OxideError VertexBuffer::BufferData(const size_t size, void* data) {
-
-        Bind();        
-        glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-        m_BufferSize = size;
-        return OxideError::OK;
-
-    }
-
-    OxideError VertexBuffer::SubData(const size_t begin, const size_t size, void* data) {
-        if (begin + size > m_BufferSize) {
-            CO_CORE_ERROR("Tried to write data outside of buffer! Use Alloc first!");
-            return OxideError::Error;
-        }
-        Bind();
-        long int pos = begin;
-        glBufferSubData(GL_ARRAY_BUFFER, pos, size, data);
-        return OxideError::OK;
-    }
-
-    OxideError VertexBuffer::AppendData(const size_t size, void* data) {
-
-
-        Bind();
-        if ((m_BufferPosition + size) > m_BufferSize) {
-            Alloc((m_BufferPosition + size) * 1.5);
-        }
-        long int pos = m_BufferPosition;
-        glBufferSubData(GL_ARRAY_BUFFER, pos, size, data);
-        m_BufferPosition += size;
-        return OxideError::OK;
-
-    }
-
-    OxideError VertexBuffer::Alloc(const size_t size) {
-        
-        ZoneScopedN("GPUAllocation")
-        if (size < m_BufferSize) return OxideError::Error;
-        if (m_BufferPosition == 0 || m_BufferSize == 0) {
-            m_VAO->Bind();
-            Bind();
-            glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
-            m_BufferSize = size;
-            UpdateLayout();
-            return OxideError::OK;            
-        }
-        TracyGpuZone("Allocation")
-        glBindBuffer(GL_COPY_READ_BUFFER, m_RendererID);
-        uint newBuffer;
-        glGenBuffers(1, &newBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, newBuffer);
-        glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STATIC_DRAW);
-        glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_ARRAY_BUFFER, 0, 0, m_BufferPosition);
-        glDeleteBuffers(1, &m_RendererID);
-        glBindBuffer(GL_COPY_READ_BUFFER, 0);
-        
-        m_RendererID = newBuffer;
-        m_BufferSize = size;
-
-        m_VAO->Bind();
-        Bind();
-        m_VAO->Unbind();
-        UpdateLayout();
-        return OxideError::OK;
-    }
-
-    size_t VertexBuffer::GetBufferSize() const {
-        return m_BufferSize;
-    }
-
     void VertexBuffer::UpdateLayout() {
         ZoneScoped
         size_t stride = 0;
         size_t offset = 0;
         
-        for (size_t bufferElement = 0; bufferElement < BufferLayout.size(); bufferElement++) {
+        for (size_t bufferElement = 0; bufferElement < bufferLayout.size(); bufferElement++) {
 
-            if (BufferLayout[bufferElement].type == OxideType::None) continue;
-            stride += BufferLayout[bufferElement].TypeSize * BufferLayout[bufferElement].count;
+            if (bufferLayout[bufferElement].type == OxideType::None) continue;
+            stride += bufferLayout[bufferElement].TypeSize * bufferLayout[bufferElement].count;
 
         }
 
         m_VAO->Bind(); //TODO: Make a global VertexArray for OpenGL
         Bind();
 
-        for (size_t bufferElement = 0; bufferElement < BufferLayout.size(); bufferElement++) {
-            if (BufferLayout[bufferElement].type == OxideType::None) {glDisableVertexAttribArray(bufferElement); continue;}
+        for (size_t bufferElement = 0; bufferElement < bufferLayout.size(); bufferElement++) {
+            if (bufferLayout[bufferElement].type == OxideType::None) {glDisableVertexAttribArray(bufferElement); continue;}
             glEnableVertexAttribArray(bufferElement);
-            glVertexAttribPointer(  bufferElement, BufferLayout[bufferElement].count, 
-                                    OpenGLGetType(BufferLayout[bufferElement].type), 
+            glVertexAttribPointer(  bufferElement, bufferLayout[bufferElement].count, 
+                                    OpenGLGetType(bufferLayout[bufferElement].type), 
                                     GL_FALSE, stride, (void*)offset);
             
-            offset += BufferLayout[bufferElement].TypeSize * BufferLayout[bufferElement].count;
+            offset += bufferLayout[bufferElement].TypeSize * bufferLayout[bufferElement].count;
         }
     }
 
-    Ref<VertexBuffer> VertexBuffer::Create() {
-        return CreateRef<VertexBuffer>(new VertexBuffer());
+    void VertexBuffer::EnableAttrib(uint attrib) {
+        m_VAO->Bind();
+        glEnableVertexAttribArray(attrib);
     }
 
-    IndexBuffer::IndexBuffer() {
+    void VertexBuffer::DisableAttrib(uint attrib) {
+        m_VAO->Bind();
+        glDisableVertexAttribArray(attrib);
+    }
+
+
+//_____________________________________________________________________________________________________________________________________
+
+    Ref<IndexBuffer> IndexBuffer::Create() {
+        return Ref<IndexBuffer>(new IndexBuffer());
+    }
+
+    IndexBuffer::IndexBuffer() : Buffer(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW) {
         glGenBuffers(1, &m_RendererID);
         m_BufferSize = 0;
-        m_BufferPosition = 0;
+        bufferPosition = 0;
     }
 
     IndexBuffer::~IndexBuffer() {
         glDeleteBuffers(1, &m_RendererID);
     }
-
-    void IndexBuffer::Bind() {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-    }
-
-    OxideError IndexBuffer::BufferData(const size_t size, const void *data) {
-
-        Bind();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-        m_BufferSize = size;
-        m_BufferPosition = size;
-        return OxideError::OK;
-
-    }
-
-    OxideError IndexBuffer::AppendData(const size_t size, void* data) {
-
-        if ((m_BufferPosition + size) > m_BufferSize) {
-            Alloc((m_BufferPosition + size) * 1.5);
-        }
-        Bind();
-        long int pos = m_BufferPosition;
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, pos, size, data);
-        m_BufferPosition += size;
-        return OxideError::OK;
-    }
-
-    OxideError IndexBuffer::Alloc(const size_t size) {
-        ZoneScopedN("GPUAllocation")
-        if (size < m_BufferSize) return OxideError::Error;
-        if (m_BufferPosition == 0 || m_BufferSize == 0) {
-            Bind();
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
-            m_BufferSize = size;
-            return OxideError::OK;            
-        }
-        TracyGpuZone("Allocation")
-        glBindBuffer(GL_COPY_READ_BUFFER, m_RendererID);
-        uint newBuffer;
-        glGenBuffers(1, &newBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, NULL, GL_STATIC_DRAW);
-        glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_ELEMENT_ARRAY_BUFFER, 0, 0, m_BufferSize);
-        glDeleteBuffers(1, &m_RendererID);
-        glBindBuffer(GL_COPY_READ_BUFFER, 0);
-
-        m_RendererID = newBuffer;
-        m_BufferSize = size;
-        Bind();
-        
-        return OxideError::OK;
-    }
-
-    const size_t& IndexBuffer::GetBufferSize() {
-        return m_BufferSize;
-    }
-
-
-    Ref<IndexBuffer> IndexBuffer::Create() {
-        return CreateRef<IndexBuffer>(new IndexBuffer());
-    }
-
 }

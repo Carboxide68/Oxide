@@ -11,11 +11,11 @@
 namespace Oxide {
 
     Ref<Shader> Shader::Create(const std::string& name, const std::string& filePath) {
-        return CreateRef<Shader>(new Shader(name, filePath));
+        return Ref<Shader>(new Shader(name, filePath));
     }
 
     Ref<Shader> Shader::Create(const std::string& filePath) {
-        return CreateRef<Shader>(new Shader(filePath));
+        return Ref<Shader>(new Shader(filePath));
     }
 
     Shader::Shader(const std::string& name, const std::string& filePath) {
@@ -46,46 +46,36 @@ namespace Oxide {
     }
     
     void Shader::Unbind() {
-
         glUseProgram(0);
 
     }
 
     void Shader::SetUniform(const std::string& name, const bool& value) {
-        ZoneScopedN("Uniformb")
         glUniform1i(GetUniformLocation(name), value);
     }
     void Shader::SetUniform(const std::string& name, const int& value) {
-        ZoneScopedN("Uniformi")
         glUniform1i(GetUniformLocation(name), value);
     }
     void Shader::SetUniform(const std::string& name, const uint& value) {
-        ZoneScopedN("Uniformui")
         glUniform1ui(GetUniformLocation(name), value);
     }
     void Shader::SetUniform(const std::string& name, const float& value) {
-        ZoneScopedN("Uniformf")
         glUniform1f(GetUniformLocation(name), value);
     }
     void Shader::SetUniform(const std::string& name, const glm::vec2& value) {
-        ZoneScopedN("Uniformf2")
         glUniform2f(GetUniformLocation(name), value.x, value.y);
     }
     void Shader::SetUniform(const std::string& name, const glm::vec3& value) {
-        ZoneScopedN("Uniformf3")
         glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
     }
     void Shader::SetUniform(const std::string& name, const glm::vec4& value) {
-        ZoneScopedN("Uniformf4")
         glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
     }
     void Shader::SetUniform(const std::string& name, const glm::mat4& value) {
-        ZoneScopedN("Uniform4x4")
         glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
     }
 
     int32_t Shader::GetUniformLocation(const std::string& name) {
-        ZoneScopedN("Uniform location")
         return glGetUniformLocation(m_ProgramID, name.c_str());
     }
 

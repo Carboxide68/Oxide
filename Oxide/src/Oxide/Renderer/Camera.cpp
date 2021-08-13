@@ -67,7 +67,7 @@ namespace Oxide {
         glm::vec3 UP = glm::vec3(0, 1, 0);
 
         glm::vec3 z = m_LookingDir;
-        glm::vec3 x = glm::cross(z, UP); //Will always be normalized since we have 2 vectors with length 1
+        glm::vec3 x = glm::normalize(glm::cross(z, UP));
         glm::vec3 y = glm::cross(x, z);
 
         glm::vec3 p = m_Position;
@@ -100,7 +100,7 @@ namespace Oxide {
     }
                                                                 //TODO: Make sure that it doesn't become bad if position is too close to x = 1
     void PerspectiveCamera::LookAt(const glm::vec3& position, bool relative) {
-        m_LookingDir = glm::normalize((relative) ? position : position - m_Position);
+        m_LookingDir = glm::normalize((relative) ? position : (position - m_Position));
         m_UpdateViewMatrix = true;
     }
     

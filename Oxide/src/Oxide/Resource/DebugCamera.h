@@ -12,9 +12,9 @@ namespace Oxide {
 
         void OnStart() override {
             
-            camera = (PerspectiveCamera*)Game->ActiveScene->camera.get();
+            camera = (PerspectiveCamera*)Game->scene->camera.get();
             movement = glm::vec3(0);
-            movementDir = &Game->ActiveScene->camera->GetLookAt();
+            movementDir = &Game->scene->camera->GetLookAt();
             glfwGetCursorPos(Game->window.GetGLFWWindow(), &lastx, &lasty);
 
             Game->window.eventhandler->OnKeyEvent([&] (OxideEvent key, OxideEvent action) -> void {
@@ -122,11 +122,11 @@ namespace Oxide {
             forwardDir.y = 0;
             forwardDir = glm::normalize(forwardDir);
             glm::vec3 transformed = (constant * movement).x * cross(*movementDir, {0, 1, 0}) + (constant * movement).y * glm::vec3(0, 1, 0) + (constant * movement).z * (forwardDir);
-            Game->ActiveScene->camera->Move(transformed);
+            Game->scene->camera->Move(transformed);
             if (!activemouse) {
                 if (oldDir == *movementDir) {
                     glm::vec3 newdir = {cos(xangle) * cos(yangle), sin(yangle), sin(xangle) * cos(yangle)};
-                    Game->ActiveScene->camera->LookAt(newdir, true);
+                    Game->scene->camera->LookAt(newdir, true);
                     oldDir = *movementDir;
                 } else {
                     oldDir = *(movementDir);

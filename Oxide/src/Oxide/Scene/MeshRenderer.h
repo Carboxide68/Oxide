@@ -26,6 +26,8 @@ namespace Oxide {
          * @param update If the mesh has been updated since last draw call, set this to true. Standard is false.
          */
         void Draw(uint &id, const Mesh& mesh, bool update = false);
+        void DrawInstance(uint& id, const glm::mat4& transform);
+        void Load(uint &id, const Mesh& mesh);
 
         /**
          * @brief Warning! Not fully implemented yet!
@@ -42,33 +44,41 @@ namespace Oxide {
 
     private:
 
+        struct InstanceData {
+            uint id;
+            glm::mat4 transform;
+        };
+
         struct DrawObject {
             MeshMaterial Material;
 
             std::pair<uint, uint> VertexBufferLocation {0, 0};
             std::pair<uint, uint> IndexBufferLocation {0, 0};
             glm::mat4 ModelMatrix = glm::mat4(1);
-            char DrawMode = 1; /* 0: Indexed; 1: Arrays */
+            unsigned char DrawMode = 0; /* 0: Indexed; 1: Arrays */
+            unsigned char DataProps = 0;
+            
             uint DrawCount = 0;
-            char DataProps = 0;
-            bool enabled = true;
         };
 
         MeshRenderer(Scene* scene);
 
-        CleanBuffers();
+        void CleanBuffers();
+        void Align(size_t multiple);
 
         Ref<VertexBuffer> m_VertexBuffer;
         Ref<IndexBuffer> m_IndexBuffer;
         Ref<Shader> m_Shader;
 
         std::unordered_map<uint, DrawObject> m_IdLookup;
-        std::vector<uint> m_Draws;
+        std::vector<InstanceData> m_Draws;
         uint m_IdTally = 1;
-        size_t m_VertexbufferHead = 0;
-        size_t m_IndexbufferHead = 0;
+        size_t m_VertexBufferHead = 0;
+        size_t m_IndexBufferHead = 0;
 
-        float m_MinPercentPopulated = 0.67f;
+        size_t m_Padding = 0;
+
+        float m_MinPercentPopulated = 0.33f;
 
         friend Scene;
 

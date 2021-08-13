@@ -2,6 +2,7 @@
 
 #include "Oxide/Core/Base.h"
 #include "Oxide/Renderer/VertexArray.h"
+#include "Oxide/Renderer/OpenGLCommon.h"
 
 namespace Oxide {
 
@@ -16,54 +17,13 @@ namespace Oxide {
         bool enabled = true;
     };
 
-    class VertexBuffer { //TODO: Give parent class buffer that exposes buffer general functionality. Maybe move Buffer, Alloc etc there
+    class Buffer {
 
     public:
 
-        ~VertexBuffer();
-        void Bind() override;
-
-        void AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer);
-        Ref<IndexBuffer> GetAssociatedIndexBuffer() const;
-
-
-        /**
-         * @brief Pushes BufferElements as the buffer layout 
-         * 
-         */
-        void UpdateLayout();
-
-        /**
-         * @brief Quick way to enable an attribute without having to update the layout. Does not update the associated BufferElement.
-         * 
-         */
-        void EnableAttrib(uint attrib);
-
-        /**
-         * @brief Quick way to disable an attribute without having to update the layout. Does not update the associated BufferElement.
-         * 
-         */
-        void DisableAttrib(uint attrib);
-
-
-        /**
-         * @brief Draws elements in current buffer. Requires an associated index buffer
-         * 
-         * @param count The amount of vertices that should be drawn
-         * @param offset Offset to the first value in the index buffer
-         * @param basevertex Offset to the first vertex in the vertex buffer
-         * @return OxideError 
-         */
-        OxideError DrawElements(const size_t count, const size_t offset = 0, const size_t basevertex = 0); //If count is negative, it will draw the maximum number of indices.
-
-        /**
-         * @brief Draw arrays from current buffer
-         * 
-         * @param count The amount of vertices to be drawn
-         * @param offset Offset to the first vertex in the vertex buffer 
-         * @return OxideError 
-         */
-        OxideError DrawArrays(const size_t count, const size_t offset = 0); //If count is negative, it will draw the maximum number of vertices.
+        ~Buffer();
+        
+        void Bind();
 
         /**
          * @brief Creates a new buffer with data
@@ -101,51 +61,111 @@ namespace Oxide {
          */
         OxideError Alloc(const size_t size);
 
-        inline uint32_t GetHandle() {return m_RendererID;}
+        /**
+         * @brief Copies data from one GPU buffer to another
+         * 
+         * @param other Write target
+         * @param buffer0_offset Offset in first buffer
+         * @param buffer1_offset Offset in second buffer
+         * @param size Amount of bytes to copy
+         * @return OxideError 
+         */
+        OxideError CopyData(Ref<Buffer> other, size_t buffer0_offset, size_t buffer1_offset, size_t size);
+
+        inline uint32_t GetHandle() const {return m_RendererID;}
+        inline GLenum GetBufferUse() const {return m_BufferUse;}
+        inline GLenum GetBufferType() const {return m_BufferType;}
 
         size_t GetBufferSize() const;
 
-        static Ref<VertexBuffer> Create();
+        static Ref<Buffer> Create(GLenum bufferType, GLenum bufferUse);
 
-        std::vector<BufferElement> BufferLayout;
+        size_t bufferPosition = 0;
+    
+    protected:
+
+        Buffer(GLenum bufferType, GLenum bufferUse);
+
+        GLenum m_BufferType;
+        GLenum m_BufferUse;
+        size_t m_BufferSize = 0;
+        uint32_t m_RendererID;
+    };
+
+    class IndexBuffer;
+
+    class VertexBuffer : public Buffer {
+
+    public:
+
+        ~VertexBuffer();
+        void Bind();
+
+        void AssociateIndexBuffer(const Ref<IndexBuffer> indexBuffer);
+        Ref<IndexBuffer> GetAssociatedIndexBuffer() const;
+
+        /**
+         * @brief Draws elements in current buffer. Requires an associated index buffer
+         * 
+         * @param count The amount of vertices that should be drawn
+         * @param offset Offset to the first value in the index buffer
+         * @param basevertex Offset to the first vertex in the vertex buffer
+         * @return OxideError 
+         */
+        OxideError DrawElements(const size_t count, const size_t offset = 0, const size_t basevertex = 0);
+
+        /**
+         * @brief Draw arrays from current buffer
+         * 
+         * @param count The amount of vertices to be drawn
+         * @param offset Offset to the first vertex in the vertex buffer 
+         * @return OxideError 
+         */
+        OxideError DrawArrays(const size_t count, const size_t offset = 0);
+
+        /**
+         * @brief Pushes BufferElements as the buffer layout 
+         * 
+         */
+        void UpdateLayout();
+
+        /**
+         * @brief Quick way to enable an attribute without having to update the layout. Does not update the associated BufferElement.
+         * 
+         */
+        void EnableAttrib(uint attrib);
+
+        /**
+         * @brief Quick way to disable an attribute without having to update the layout. Does not update the associated BufferElement.
+         * 
+         */
+        void DisableAttrib(uint attrib);
+
+        static Ref<VertexBuffer> Create();
+        static Ref<VertexBuffer> Create(uint32_t handle, size_t buffersize);
+
+        std::vector<BufferElement> bufferLayout;
 
     private:
 
         VertexBuffer();
+        VertexBuffer(uint32_t handle, size_t buffersize);
 
         Ref<VertexArray> m_VAO;
-        uint32_t m_RendererID;
         Ref<IndexBuffer> m_IndexBuffer;
-
-        size_t m_BufferSize;
-        size_t m_BufferPosition;
-        size_t m_BufferStride;
         
     };
 
-    class IndexBuffer {
+    class IndexBuffer : public Buffer {
 
     public:
 
         ~IndexBuffer();
-        void Bind();
-
-        OxideError BufferData(const size_t size, const void *data);
-        OxideError AppendData(const size_t size, void* data);
-        OxideError Alloc(const size_t size);
-
-        const size_t& GetBufferSize();
-
-        inline uint32_t GetHandle() {return m_RendererID};
 
         static Ref<IndexBuffer> Create();
 
     private:
         IndexBuffer();
-
-        uint32_t m_RendererID;
-        size_t m_BufferSize;
-        size_t m_BufferPosition;
 
     };
 

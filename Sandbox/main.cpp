@@ -9,33 +9,33 @@ using namespace Oxide;
 class MyObject : public Actor {
 public:
     void OnStart() override {
-        PerspectiveCamera* camera = (PerspectiveCamera*)Game->ActiveScene->camera.get();
-        myRenderer = std::static_pointer_cast<MeshRenderer>(Game->ActiveScene->GetRenderer("MeshRenderer"));
+        PerspectiveCamera* camera = (PerspectiveCamera*)Game->scene->camera.get();
+        myRenderer = std::static_pointer_cast<MeshRenderer>(Game->scene->GetRenderer("MeshRenderer"));
 
-        myModel.LoadModel("Sandbox/resource/North_American_SNJ_Harvard_USN_V08.obj");
+        myModel.LoadModel("Sandbox/resource/backpack/scene.gltf");
         for (auto& mesh : myModel.Meshes) {
-            mesh.SetScale(0.039f);
+            mesh.SetScale(0.39f);
         }
         myIds.resize(myModel.Meshes.size(), 0);
 
         Game->window.renderer->SetClearColor(1, 1, 1, 1);
-        Game->window.renderer->ChangeState(Oxide::CRenderer::RenderSettings::FACE_CULLING, false);
-        glEnable(GL_DEPTH_TEST);
+        Game->crenderer->Disable(GL_CULL_FACE);
+        Game->crenderer->Enable(GL_DEPTH_TEST);
         camera->SetFOV(60.0f);
-        {
-            WindowSettings settings = {"Testing", 720, 500, false};
-            Game->window.UpdateSettings(settings);
-        }
+        
+        WindowSettings settings = {"Testing", 720, 500, true};
+        Game->window.UpdateSettings(settings);
+    
         Game->window.renderer->SetViewport(2560, 1440);
         camera->SetAspect(2560.0/1440.0);
-        camera->SetPosition({5, 0, 5});
+        camera->SetPosition({2, 0, 2});
         camera->LookAt({0, 0, 0});
         
     }
 
     void EachFrame() override {
         for (uint i = 0; i < myModel.Meshes.size(); i++) {
-            myRenderer->Draw(myIds[i], myModel.Meshes[i]);
+            myRenderer->Draw(myIds[i], myModel.Meshes[i], false);
         }
     }
 
@@ -57,10 +57,10 @@ int main(int argc, char *argv[]) {
 
     Game->Init();
 
-    Game->ActiveScene->AddRenderer<MeshRenderer>();
+    Game->scene->AddRenderer<MeshRenderer>();
 
-    Game->ActiveScene->AddActor<MyObject>();
-    Game->ActiveScene->AddActor<DebugCamera>();
+    Game->scene->AddActor<MyObject>();
+    Game->scene->AddActor<DebugCamera>();
     Game->Start();
 
 }

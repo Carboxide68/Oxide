@@ -14,7 +14,7 @@ namespace Oxide {
 
         window.eventhandler->OnResizeEvent([&] (int width, int height) -> void {
             window.renderer->SetViewport(width, height);
-            ActiveScene->camera->SetAspect((float)width/(float)height);
+            scene->camera->SetAspect((float)width/(float)height);
         });
 
         m_ChangeScene();
@@ -42,7 +42,7 @@ namespace Oxide {
     }
     
     void Renderer::m_ChangeScene() {
-        m_ActiveScene = ActiveScene;
+        m_ActiveScene = scene;
         m_ActiveScene->f_Initialize();
     }
 
@@ -52,14 +52,14 @@ namespace Oxide {
 
     void Renderer::Init() {
         window.Init();
-        window.UpdateSettings(WindowSet);
+        window.UpdateSettings(windowSet);
     }
 
     Renderer::Renderer() {
         m_Draws.reserve(100);
-        ActiveScene = Scene::CreateScene();
-        m_ActiveScene = ActiveScene;
-        WindowSet = m_LoadWindowSettings();
+        scene = Scene::CreateScene();
+        m_ActiveScene = scene;
+        windowSet = m_LoadWindowSettings();
         crenderer = window.renderer.get();
     }
 

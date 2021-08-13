@@ -10,7 +10,7 @@ namespace Oxide {
         VertexArray();
         ~VertexArray();
 
-        uint32_t GetHandle() {return m_RendererID};
+        uint32_t GetHandle() {return m_RendererID;}
         
         void Bind();
         void Unbind();

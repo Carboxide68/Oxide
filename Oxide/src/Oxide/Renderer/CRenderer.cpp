@@ -10,6 +10,10 @@ namespace Oxide {
         }
     }
 
+    Scope<CRenderer> CRenderer::Create() {
+        return Scope<CRenderer>(new CRenderer());
+    }
+
     CRenderer::~CRenderer() = default;
 
     CRenderer::CRenderer() : m_ClearColor(1, 1, 1, 1) {
@@ -27,7 +31,7 @@ namespace Oxide {
 
     }
 
-    void CRenderer::SetViewport(CRenderer::Viewport viewport) {
+    void CRenderer::SetViewport(Viewport viewport) {
 
         glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
@@ -47,10 +51,15 @@ namespace Oxide {
 
     void CRenderer::BeginFrame() {
         ClearBuffers();
+        m_Frame++;
     }
 
     void CRenderer::EndFrame() {
         TracyGpuCollect
     }
+
+    void CRenderer::Enable(GLenum capability) {glEnable(capability);}
+
+    void CRenderer::Disable(GLenum capability) {glDisable(capability);};
 
 }

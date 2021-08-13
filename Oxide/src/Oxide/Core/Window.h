@@ -13,7 +13,7 @@ namespace Oxide {
         std::string title;
 
         unsigned int width, height;
-        bool VSync;
+        int VSync;
 
     };
     

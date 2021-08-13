@@ -15,7 +15,11 @@ namespace Oxide {
         ZoneScoped
         Meshes.clear();
 
-        const aiScene* scene = importer.ReadFile(filePath, aiProcessPreset_TargetRealtime_Quality | aiProcess_OptimizeMeshes);
+        const aiScene* scene;
+        {
+            ZoneScopedN("Assimp read")
+            scene = importer.ReadFile(filePath, aiProcessPreset_TargetRealtime_Quality | aiProcess_OptimizeMeshes);
+        }
 
         if (!scene) {
             CO_CORE_WARN("Failed to load model at path: %s!", filePath.c_str());
@@ -169,6 +173,40 @@ namespace Oxide {
             }
 
         }
+    
+        // CopyNodes(scene->mRootNode, aiMatrix4x4());
+        //TODO: Make things nodebased so that scaling works
+
         return OxideError::OK;
+    }
+
+    void Model::CopyNodes(aiNode* node, aiMatrix4x4 accTransform) {
+        accTransform = node->mTransformation * accTransform;
+        if (node->mNumMeshes > 0) {
+            glm::mat4 tempmat = glm::mat4(0);
+            tempmat[0][0] = accTransform[0][0];
+            tempmat[0][1] = accTransform[1][0];
+            tempmat[0][2] = accTransform[2][0];
+            tempmat[0][3] = accTransform[3][0];
+            tempmat[1][0] = accTransform[0][1];
+            tempmat[1][1] = accTransform[1][1];
+            tempmat[1][2] = accTransform[2][1];
+            tempmat[1][3] = accTransform[3][1];
+            tempmat[2][0] = accTransform[0][2];
+            tempmat[2][1] = accTransform[1][2];
+            tempmat[2][2] = accTransform[2][2];
+            tempmat[2][3] = accTransform[3][2];
+            tempmat[3][0] = accTransform[0][3];
+            tempmat[3][1] = accTransform[1][3];
+            tempmat[3][2] = accTransform[2][3];
+            tempmat[3][3] = accTransform[3][3];
+            tempmat[0][0] = accTransform[0][0];
+            for (size_t i = 0; i < node->mNumMeshes; i++) {
+                Meshes[node->mMeshes[i]].ModelMatrix = tempmat;
+            }
+        }
+        for (size_t i = 0; i < node->mNumChildren; i++) {
+            CopyNodes(node->mChildren[i], accTransform);
+        }
     }
 }

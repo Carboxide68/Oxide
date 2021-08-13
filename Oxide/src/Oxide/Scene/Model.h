@@ -6,6 +6,7 @@
 #include <assimp/Importer.hpp>
 
 
+struct aiNode;
 namespace Oxide {
 
     class Model {
@@ -19,6 +20,7 @@ namespace Oxide {
 
     private:
 
+        void CopyNodes(aiNode* node, aiMatrix4x4 accTransform);
         static Assimp::Importer importer;
 
     };

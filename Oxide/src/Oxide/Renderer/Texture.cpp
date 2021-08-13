@@ -9,21 +9,22 @@
 namespace Oxide {
 
     Ref<Texture2D> Texture2D::Create(const std::string& imagePath) {
-        return CreateRef<Texture2D>(new Texture2D(imagePath));
+        return Ref<Texture2D>(new Texture2D(imagePath));
     }
 
     Ref<Texture2D> Texture2D::Create(const uint32_t& width, const uint32_t& height) {
-        return CreateRef<Texture2D>(new Texture2D(width, height));
+        return Ref<Texture2D>(new Texture2D(width, height));
     }
 
     Ref<Texture2D> Texture2D::Create() {
-        return CreateRef<Texture2D>(new Texture2D());
+        return Ref<Texture2D>(new Texture2D());
     }
 
     Texture2D::Texture2D(const std::string& imagePath) {
         m_Settings = TextureSettings::STANDARD_SETTING;
         glGenTextures(1, &m_RendererID);
         Load(imagePath);
+        m_Name = imagePath;
     }
 
     Texture2D::Texture2D(const uint32_t& width, const uint32_t& height) : m_Width(width), m_Height(height) {
@@ -108,14 +109,6 @@ namespace Oxide {
         return m_Name;
     }
 
-    void Texture2D::SetShaderName(const std::string& name) {
-        m_ShaderName = name;
-    }
-
-    const std::string& Texture2D::GetShaderName() const {
-        return m_ShaderName;
-    }
-
     uint32_t Texture2D::GetHeight() const {
         return m_Height;
     }
@@ -124,7 +117,7 @@ namespace Oxide {
         return m_Width;
     }
 
-    uint32_t Texture2D::GetRendererID() const {
+    uint32_t Texture2D::GetHandle() const {
         return m_RendererID;
     }
 
@@ -182,7 +175,6 @@ namespace Oxide {
     }
 
     void TextureLibrary::Add(const Ref<Texture2D>& texture) {
-        if (Exists(texture->GetName())) return;
         m_Texture2Ds[texture->GetName()] = texture;
     }
 
