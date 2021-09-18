@@ -1,0 +1,5 @@
+[submodule "Oxide/vendor/tracy"]
+    path = Oxide/vendor/tracy
+    url = https://github.com/wolfpld/tracy.git
+[submodule "Oxide/vendor/assimp"]
+    path = Oxide/vendor/assimp
