@@ -1,24 +1,3 @@
-#pragma once
-#include "Oxide/Core/Base.h"
-
-#define RENDERER_ESSENTIALS(__ClassName__) private: friend Oxide::Scene; __ClassName__(){return;}
-
-namespace Oxide {
-
-    class Scene;
-
-    class ORenderer {
-    public:
-        virtual std::vector<std::pair<int, std::function<void (void)>>> Queue() = 0;
-
-        const std::string TypeName;
-
-    protected:
-
-        Scene* m_ParentScene;
-        friend Scene;
-        ORenderer(Scene* parentScene) : m_ParentScene(parentScene){return;}
-
-    };
-
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1cb26f4daa5634965cf6a1e113f71238a5c69a52e2d44231ba5c62ca989be1b0
+size 530

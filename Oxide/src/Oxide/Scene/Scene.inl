@@ -1,18 +1,3 @@
-
-namespace Oxide {
-
-    template<Derived<Oxide::Actor> T>
-    Ref<T> Scene::AddActor() {
-        Ref<T> newActor = Ref<T>(new T());
-        m_Actors[newActor->TypeName].push_back(newActor);
-        return newActor;
-    }
-
-    template<Derived<Oxide::ORenderer> T>
-    Ref<T> Scene::AddRenderer() {
-        Ref<T> newRenderer = Ref<T>(new T(this));
-        m_Renderers[newRenderer->TypeName] = newRenderer;
-        return newRenderer;
-    }
-    
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:548c6d36dd6b08043a52411f8623193f3539f7891ed40c71b9278b5ee5073699
+size 447

@@ -1,30 +1,3 @@
-#include "Oxide/Renderer/VertexArray.h"
-#include "Oxide/Renderer/OpenGLCommon.h"
-
-namespace Oxide {
-
-    VertexArray::VertexArray() {
-
-        glGenVertexArrays(1, &m_RendererID);
-
-    }
-
-    VertexArray::~VertexArray() {
-
-        glDeleteVertexArrays(1, &m_RendererID);
-
-    }
-
-    void VertexArray::Bind() {
-        
-        glBindVertexArray(m_RendererID);
-
-    }
-
-    void VertexArray::Unbind() {
-
-        glBindVertexArray(0);
-
-    }
-
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f72d3dffdb84058a767f6f286aaa989174c1f1e58309f027a3c03d2c6dd4a643
+size 441

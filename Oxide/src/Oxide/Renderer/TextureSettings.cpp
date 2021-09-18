@@ -1,20 +1,3 @@
-
-#include "Oxide/Renderer/TextureSettings.h"
-
-namespace Oxide {
-
-    const TextureSettings TextureSettings::STANDARD_SETTING = TextureSettings();
-
-    TextureSettings::TextureSettings() {
-        TextureSettings(Wrap::REPEAT, Mag::LINEAR, Min::NEAREST);
-    }
-
-    TextureSettings::TextureSettings(Wrap wrap, Mag mag, Min min) {
-        WrapType = wrap;
-        MagFilter = mag;
-        MinFilter = min;
-        Mipmap = 0;
-    };
-
-
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5a32c35b3b4d0109aea96a5fae40331a50137e8ffdbb378234031458a7819803
+size 434
