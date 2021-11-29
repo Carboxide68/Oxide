@@ -1,11 +1,3 @@
-#pragma once
-
-#include "Oxide/Core/Base.h"
-
-#include "Oxide/Core/Window.h"
-#include "Oxide/Renderer/CRenderer.h"
-
-#include "Oxide/Renderer/Camera.h"
-#include "Oxide/Renderer/Buffer.h"
-#include "Oxide/Renderer/Texture.h"
-#include "Oxide/Renderer/Shader.h"
+version https://git-lfs.github.com/spec/v1
+oid sha256:d146d5e09a8a1b63009e31c6e40bab44841c6976d86605edd5783f1f3134124f
+size 358

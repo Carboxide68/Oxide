@@ -1,24 +1,3 @@
-buildDir = build/
-libDir = lib/
-includes = src/ vendor/
-flags = -std=c++2a -g -Wall -Wno-unused-function -O2
-
-includes := $(addprefix -I ,$(includes))
-
-dirs := $(dir $(shell find src/ -name "*.cpp"))
-objFiles := $(patsubst %.cpp, %.o, $(addprefix $(buildDir), $(notdir $(foreach dir, $(dirs), $(wildcard $(dir)*.cpp)))))
-
-CC = g++
-VPATH = %.cpp $(dirs)
-
-build: $(objFiles)
-lib: $(libDir)liboxide.a 
-
-$(buildDir)%.o: %.cpp
-	$(CC) $(flags) $(includes) -c $< -o $@
-
-$(libDir)liboxide.a: $(objFiles)
-	ar rvs $(libDir)liboxide.a $(objFiles)
-
-clean:
-	rm -f build/* || true
+version https://git-lfs.github.com/spec/v1
+oid sha256:6301b42ad947f4e39061d4fbff044ccf227678c2bcad932c9312e99621d2456e
+size 1138

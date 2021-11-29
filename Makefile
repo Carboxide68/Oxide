@@ -1,7 +1,3 @@
-
-objFiles := $(wildcard Oxide/build/*.o)
-
-app: FORCE
-	g++ -o app Sandbox/main.cpp -g $(objFiles) -I Oxide/src/ -I Oxide/vendor/ -LOxide/vendor/lib -lGL -lGLU -lGLEW -lglfw3 -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp -lassimp -std=c++2a -O2
-
-FORCE:
+version https://git-lfs.github.com/spec/v1
+oid sha256:93263a34aa3cf8dee08d0e4ab79d4cb0d4967d194b7a0d7d2b3e54094181a8ba
+size 979

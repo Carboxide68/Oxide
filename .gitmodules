@@ -1,5 +1,3 @@
-[submodule "Oxide/vendor/tracy"]
-    path = Oxide/vendor/tracy
-    url = https://github.com/wolfpld/tracy.git
-[submodule "Oxide/vendor/assimp"]
-    path = Oxide/vendor/assimp
+version https://git-lfs.github.com/spec/v1
+oid sha256:27192bfea6209fda8c26486318ad23e19b29384cd1e2faf0e6b53d8a4d63bc66
+size 340

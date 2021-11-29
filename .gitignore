@@ -1,4 +1,3 @@
-script.cpp
-script
-*.o
-liboxide.a
+version https://git-lfs.github.com/spec/v1
+oid sha256:50396fded5a35851fec68606cc7c16d7d791cd69150929f2c60afff7bae2c1d5
+size 33

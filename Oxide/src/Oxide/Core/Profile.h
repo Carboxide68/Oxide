@@ -1,26 +1,3 @@
-#pragma once
-#include "Oxide/Core/Base.h"
-
-namespace Oxide {
-
-    class Profiler {
-
-    public:
-
-        static void Init();
-
-
-
-    private:
-
-    };
-
-}
-
-#ifdef PROFILE
-#define CO_CORE_PROFILE_FUNC
-#define CO_PROFILE_FUNC
-#else
-#define CO_CORE_PROFILE_FUNC
-#define CO_PROFILE_FUNC
-#endif
+version https://git-lfs.github.com/spec/v1
+oid sha256:8f13cac5e70fe71e8b4d090704143d8d4484f7ccf9cdfb5ee2e20590bdd17a20
+size 286
